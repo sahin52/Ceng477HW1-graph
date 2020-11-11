@@ -138,6 +138,55 @@ RayIntersect checkOneTriangle(Ray ray,Scene scene,int cameraId, int TriangleId){
     RayIntersect res;
     res.isThereIntersect = false;
 
+    Vec3f v0 = scene.vertex_data[scene.triangles[TriangleId].indices.v0_id];
+    Vec3f v1 = scene.vertex_data[scene.triangles[TriangleId].indices.v1_id];
+    Vec3f v2 = scene.vertex_data[scene.triangles[TriangleId].indices.v2_id];
+
+    Vec3f v1_v0 = Vec3fminus(v1,v0);
+    Vec3f v2_v0 = Vec3fminus(v2,v0);
+    Vec3f normalv = cross(v1_v0, v2_v0);
+
+    //checking if direction of ray and normal are parallel
+    float checkparallel = dotProduct(normalv, ray.yon);
+    if (fabs(checkparallel) == 0)
+    {
+        res.isThereIntersect =false;
+        return res;
+    }      /* TODO       epsilon olacak  */
+
+    // d is in the plane equation ---- Ax + By + Cz + d = 0 
+    float d = dotProduct(normalv, v0);
+
+    // t is in the ray equation ---- ray = start + t*yon
+    float t = (dotProduct(normalv,ray.start) + d) / checkparallel ;
+    
+    //finding if intersected point inside of triangle
+    Vec3f point;
+    point.x = ray.start.x + t*ray.yon.x ;
+    point.y = ray.start.y + t*ray.yon.y ;
+    point.z = ray.start.z + t*ray.yon.z ;
+
+    //point should be inside 3 edges
+    Vec3f edge0, edge1, edge2;
+    edge0 = Vec3fminus(v1,v0);
+    edge1 = Vec3fminus(v2,v1);
+    edge2 = Vec3fminus(v0,v1);
+
+    // dot product of "cross_of_point" and "normalv" is positive means
+    // that point is in the correct side of edge
+    Vec3f cross_of_point = cross(edge0, (Vec3fminus(point,v0)) );       /*  for edge0  */
+    if( dotProduct(normalv,cross_of_point)<0 ) return res;      /* erken bitirilebilir */
+    cross_of_point = cross(edge1, (Vec3fminus(point,v1)) );       /*  for edge1  */
+    if( dotProduct(normalv,cross_of_point)<0 ) return res;      /* erken bitirilebilir */
+    cross_of_point = cross(edge2, (Vec3fminus(point,v2)) );       /*  for edge2  */
+    if( dotProduct(normalv,cross_of_point)<0 ) return res;      /* erken bitirilebilir */
+
+    // if none of the ifs above true than point is inside triangle
+    res.isThereIntersect = true;
+    res.intersectPoint = point;
+    res.shape.form=TRIANGLE;
+    res.shape.id = TriangleId;
+    
     return res;
 }
 RayIntersect checkTriangles(Ray ray,Scene scene,int cameraId){
