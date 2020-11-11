@@ -11,8 +11,22 @@ int g() {
         return 0;
 }
 
+struct s{
+    int a;
+    int b;
+};
 void TEST(){
-    throw(3);
+    s q = {
+        .a = 2,
+        .b = 1
+    };
+    s w = q;
+    q.a =3;
+    w.b =5;
+    std::cout << q.a<<q.b;
+    std::cout <<w.a<<w.b;
+
+
 }
 
 int main(){

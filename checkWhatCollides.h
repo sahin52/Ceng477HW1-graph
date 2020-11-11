@@ -125,7 +125,7 @@ RayIntersect checkSpheres(Ray ray,Scene scene,int cameraId){
     for(int i = 0;i<scene.spheres.size();i++){
         rayIntersect = checkOneSphere(ray, scene.spheres[i],i,cameraId,scene);
     }
-    return rayIntersect; // t => mesafe katsayisi
+    return emptyRayIntersect; // t => mesafe katsayisi
 
 
     
@@ -198,6 +198,7 @@ RayIntersect checkTriangles(Ray ray,Scene scene,int cameraId){
     for(int i=0;i<scene.triangles.size();i++){
         rayIntersect = checkOneTriangle(ray,scene,cameraId, i);
     }
+    return rayIntersect;
 };
 //*******************************************///
 
@@ -217,16 +218,18 @@ RayIntersect checkMeshes(Ray ray,Scene scene,int cameraId){
     
 RayIntersect getNearestIntersect(RayIntersect sphereInt, RayIntersect triangleInt,RayIntersect meshInt){
     vector<RayIntersect> distances = {};
-    if(sphereInt.lengthToTheOrigin>=0)
-        distances.push_back(sphereInt);
-    if(triangleInt.lengthToTheOrigin>=0)
+    // if(sphereInt.isThereIntersect)
+    //     distances.push_back(sphereInt);
+    if(triangleInt.isThereIntersect)
         distances.push_back(triangleInt);
-    if(meshInt.lengthToTheOrigin>=0)
-        distances.push_back(meshInt);
+    // // if(meshInt.isThereIntersect)
+    // //     distances.push_back(meshInt);
     if(distances.size()==0)
     {
         //return empty bg
         return emptyRayIntersect;
+    }else{
+        //p("intersect at nearest");
     }
     RayIntersect nearest = distances[0];
     for(auto i: distances){
@@ -241,8 +244,19 @@ RayIntersect getShapeIdThatIntersectsRay(Ray ray,Scene scene,int cameraId){
     auto sphereIntersect = checkSpheres(ray,scene,cameraId);//Returns the touch point,  id and type of the shape
     auto triangleIntersect = checkTriangles(ray, scene,cameraId); // ucgene degisyosa
     auto meshIntersect = checkMeshes(ray,scene,cameraId);   //meshe degiyosa
-
+    // if(sphereIntersect.isThereIntersect){
+    //     p("sphere intersect");
+    // }
+    // // // // // if(triangleIntersect.isThereIntersect){
+    // // // // //     p("triangleIntersect");
+    // // // // // }
+    // // // // // // if(meshIntersect.isThereIntersect){
+    //     p("meshIntersect");
+    // }
     auto res = getNearestIntersect(sphereIntersect, triangleIntersect, meshIntersect);
+    if(res.isThereIntersect){
+        //p("intersect!!!!!");
+    }
     return res;
     // lengthToThe.. en kucuk olani alcaz
 
@@ -255,14 +269,14 @@ Vec3i checkWhatCollides(Ray ray,Scene scene,int cameraId ){
     RayIntersect rayIntersect = getShapeIdThatIntersectsRay(ray,scene,cameraId);//idsini verir
     //return getColorOfTheIntersection(rayIntersect, scene);
     Vec3i dolu = {
-        .x=255,
-        .y=255,
-        .z=255
+        .x=200,
+        .y=0,
+        .z=200
     };
     Vec3i bos = {
         .x=0,
-        .y=0,
-        .z=0
+        .y=200,
+        .z=100
     };
 
     if(rayIntersect.isThereIntersect){

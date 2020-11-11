@@ -25,11 +25,11 @@ using namespace parser;
  */
 unsigned char * generateImages(Scene scene){
     for(int cam = 0; cam < scene.cameras.size(); cam++){
-        unsigned char * image = new unsigned char[(scene.cameras[cam].image_height*scene.cameras[cam].image_width)];
+        unsigned char * image = new unsigned char[(scene.cameras[cam].image_height*scene.cameras[cam].image_width)* 3];
         int width = scene.cameras[0].image_width;
         int height = scene.cameras[0].image_height;
-        for(int i=0;i<width;i++){
-            for(int j=0;j<height;j++){
+        for(int i=0;i<height;i++){
+            for(int j=0;j<width;j++){
                 auto ray  = generateRay(i,j,scene.cameras[cam]);
                 if(i<3 && j<3) {
                     std::cout << ray.yon.x << std::endl;
@@ -39,9 +39,9 @@ unsigned char * generateImages(Scene scene){
                 Vec3i pixel = checkWhatCollides(ray,scene,cam);//bir pixel
 
                 //TODO:
-                // image[i*width+j  ] =(unsigned char)  pixel.x;
-                // image[i*width+j+1] =(unsigned char)  pixel.y;
-                // image[i*width+j+2] =(unsigned char)  pixel.z;
+                image[i*width*3+3*j  ] =(unsigned char)  pixel.x; 
+                image[i*width*3+3*j+1] =(unsigned char)  pixel.y;
+                image[i*width*3+3*j+2] =(unsigned char)  pixel.z;
             }
         }
         p("Generating image: "+scene.cameras[cam].image_name);
