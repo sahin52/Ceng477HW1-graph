@@ -203,10 +203,26 @@ RayIntersect getShapeIdThatIntersectsRay(Ray ray,Scene scene,int cameraId){
 
 
 Vec3i checkWhatCollides(Ray ray,Scene scene,int cameraId ){
-    //Shape shape = getShapeIdThatIntersectsRay(ray,scene,cameraId);//idsini verir
-    Vec3i res;
+    RayIntersect rayIntersect = getShapeIdThatIntersectsRay(ray,scene,cameraId);//idsini verir
+    //return getColorOfTheIntersection(rayIntersect, scene);
+    Vec3i dolu = {
+        .x=255,
+        .y=255,
+        .z=255
+    };
+    Vec3i bos = {
+        .x=0,
+        .y=0,
+        .z=0
+    };
+
+    if(rayIntersect.isThereIntersect){
+        return dolu;
+    }else{
+        return bos;
+    }
     //res = aynaGolgeVsEkle(shape, scene, ray, cameraId);
-    return res;
+    //return res;
 
 }
 

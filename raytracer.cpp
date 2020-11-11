@@ -36,7 +36,7 @@ unsigned char * generateImages(Scene scene){
                     std::cout << ray.yon.y << std::endl;
                     std::cout << ray.yon.z << std::endl;
                 }
-               // Vec3i pixel = checkWhatCollides(ray,scene,cam);//bir pixel
+                Vec3i pixel = checkWhatCollides(ray,scene,cam);//bir pixel
 
                 //TODO:
                 // image[i*width+j  ] =(unsigned char)  pixel.x;
