@@ -31,11 +31,12 @@ unsigned char * generateImages(Scene scene){
         for(int i=0;i<height;i++){
             for(int j=0;j<width;j++){
                 auto ray  = generateRay(i,j,scene.cameras[cam]);
-                if(i<3 && j<3) {
-                    std::cout << ray.yon.x << std::endl;
-                    std::cout << ray.yon.y << std::endl;
-                    std::cout << ray.yon.z << std::endl;
-                }
+                // if(i%100==0 && j%100==0) {
+                    
+                //     std::cout << i << " " << j<< " " << ray.yon.x << " ";
+                //     std::cout << ray.yon.y << " ";
+                //     std::cout << ray.yon.z << std::endl;
+                // }
                 Vec3i pixel = checkWhatCollides(ray,scene,cam);//bir pixel
 
                 //TODO:
