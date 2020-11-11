@@ -75,15 +75,15 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
     auto c = dotProduct(ray_origin_to_sp_center,ray_origin_to_sp_center) - radius*radius;
     float discriminant = b*b - 4.0*a*c;
     if(discriminant<0){
-        string anan = "No hit to the sphere " + to_string(radius) + " by the ray: "+ to_string(ray.start.x) 
-        +" "+ to_string(ray.start.y)  +" "+ to_string(ray.start.z)  +" "+ to_string(ray.yon.x)  +" "+ to_string(ray.yon.y)  +" "+ to_string(ray.yon.z)
-         ;
-        p(anan);
+        // string anan = "No hit to the sphere " + to_string(radius) + " by the ray: "+ to_string(ray.start.x) 
+        // +" "+ to_string(ray.start.y)  +" "+ to_string(ray.start.z)  +" "+ to_string(ray.yon.x)  +" "+ to_string(ray.yon.y)  +" "+ to_string(ray.yon.z)
+        //  ;
+        //p(anan);
         RayIntersect rayIntersect;
         rayIntersect.isThereIntersect = false;
         return rayIntersect;
     }else{
-        p("intersected!!");
+        //p("intersected!!");
         auto t1 = (-b-sqrt(discriminant))/(2.0*a);
         auto t2 = (-b+sqrt(discriminant))/(2.0*a);
 
