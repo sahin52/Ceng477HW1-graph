@@ -204,20 +204,31 @@ RayIntersect checkTriangles(Ray ray,Scene scene,int cameraId){
 };
 //*******************************************///
 
+//////?????????????????????????/////////// MESH START
+RayIntersect checkOneMesh(Ray ray,Mesh mesh,int meshId,int cameraId){
+    //mesh ucgenlerden olusur, mesh icerisindeki tum faceleri bir ucgen haline getirip checkonetriangle'da kullanabiliriz
+    RayIntersect res = emptyRayIntersect;
+    for(auto i: mesh.faces){
+        
+    }
+    //throw("implement\n");
 
-RayIntersect checkOneMesh(Ray ray,Mesh mesh,int cameraId){
-    RayIntersect res;
-    throw("implement\n");
     return res;
 }
 
 RayIntersect checkMeshes(Ray ray,Scene scene,int cameraId){
-    // RayIntersect checkOneMesh(Ray ray,Mesh mesh,int cameraId);
-
+    RayIntersect res = emptyRayIntersect;
+    for(int i=0;i<scene.meshes.size();i++){
+        checkOneMesh(ray,scene.meshes[i],i,cameraId);
+    }
+    return res;
+    
     // RayIntersect rayIntersect;
     // rayIntersect.isThereIntersect = false;
 };
-    
+//////?????????????????????????/////////// MESH END
+
+
 RayIntersect getNearestIntersect(RayIntersect sphereInt, RayIntersect triangleInt,RayIntersect meshInt){
     vector<RayIntersect> distances = {};
     if(sphereInt.isThereIntersect)
