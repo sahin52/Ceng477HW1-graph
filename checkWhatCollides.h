@@ -25,7 +25,14 @@ struct RayIntersect{
     bool isThereIntersect;//false ise bg
     Vec3f intersectPoint;
 };
-
+Shape emptyshape;
+Vec3f emptyPoint;
+const RayIntersect emptyRayIntersect = {
+    .shape= emptyshape,
+    .lengthToTheOrigin=-1.,
+    .isThereIntersect = false,
+    .intersectPoint = emptyPoint,
+};
 parser::Vec3f Vec3fminus(parser::Vec3f v1, parser::Vec3f v2){
     parser::Vec3f res;
     res.x = v1.x-v2.x;
@@ -45,7 +52,7 @@ Vec3i aynaGolgeVsEkle(Shape shape, Scene scene,Ray ray, int cameraNum){///bunsuz
     return res;
 }
 /**
- * returns the collision point and; type and id of the shape if a collision happened
+ * returns the collision point and; type and id of the shape if a collision happens
  */
 RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Scene scene){
     //TODO
@@ -81,9 +88,7 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
         auto t2 = (-b+sqrt(discriminant))/(2.0*a);
 
         if(t1<0){
-            RayIntersect res;
-            res.isThereIntersect = false;
-            return res;
+            return emptyRayIntersect;
         }
         if(t1<t2){
             RayIntersect res;
@@ -94,6 +99,7 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
             shape.form = SPHERE;
             res.shape = shape;
             res.intersectPoint ;//Find intersection point t1 TODO
+            return res;
         }else{
             RayIntersect res;
             res.isThereIntersect = true;
@@ -103,19 +109,21 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
             shape.form = SPHERE;
             res.shape = shape;
             res.intersectPoint ;//Find intersection point t2 TODO
+            return res;
         }
     }
 
     
     
 }
-
+/** Checks all spheres and returns the nearest RayIntersect To the camera
+ * 
+*/
 RayIntersect checkSpheres(Ray ray,Scene scene,int cameraId){
 
-    RayIntersect rayIntersect;
-    rayIntersect.isThereIntersect = false;
+    RayIntersect rayIntersect = emptyRayIntersect;
     for(int i = 0;i<scene.spheres.size();i++){
-        checkOneSphere(ray, scene.spheres[i],i,cameraId,scene);
+        rayIntersect = checkOneSphere(ray, scene.spheres[i],i,cameraId,scene);
     }
     return rayIntersect; // t => mesafe katsayisi
 
@@ -158,16 +166,39 @@ RayIntersect checkMeshes(Ray ray,Scene scene,int cameraId){
     // rayIntersect.isThereIntersect = false;
 };
     
-Shape getShapeIdThatIntersectsRay(Ray ray,Scene scene,int cameraId){ 
-    checkSpheres(ray,scene,cameraId);//Returns the touch point,  id and type of the shape
-    checkTriangles(ray, scene,cameraId); // ucgene degisyosa
-    checkMeshes(ray,scene,cameraId);   //meshe degiyosa
+RayIntersect getNearestIntersect(RayIntersect sphereInt, RayIntersect triangleInt,RayIntersect meshInt){
+    vector<RayIntersect> distances = {};
+    if(sphereInt.lengthToTheOrigin>=0)
+        distances.push_back(sphereInt);
+    if(triangleInt.lengthToTheOrigin>=0)
+        distances.push_back(triangleInt);
+    if(meshInt.lengthToTheOrigin>=0)
+        distances.push_back(meshInt);
+    if(distances.size()==0)
+    {
+        //return empty bg
+        return emptyRayIntersect;
+    }
+    RayIntersect nearest = distances[0];
+    for(auto i: distances){
+        if(i.lengthToTheOrigin<nearest.lengthToTheOrigin){
+            nearest = i;
+        }
+    }
+    return nearest;
+}
 
+RayIntersect getShapeIdThatIntersectsRay(Ray ray,Scene scene,int cameraId){ 
+    auto sphereIntersect = checkSpheres(ray,scene,cameraId);//Returns the touch point,  id and type of the shape
+    auto triangleIntersect = checkTriangles(ray, scene,cameraId); // ucgene degisyosa
+    auto meshIntersect = checkMeshes(ray,scene,cameraId);   //meshe degiyosa
+
+    auto res = getNearestIntersect(sphereIntersect, triangleIntersect, meshIntersect);
+    return res;
     // lengthToThe.. en kucuk olani alcaz
 
     //enYakinNoktayiSec();
-    Shape res;
-    return res;
+    
 }
 
 
