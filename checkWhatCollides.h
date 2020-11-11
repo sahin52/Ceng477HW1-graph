@@ -42,7 +42,7 @@ parser::Vec3f Vec3fminus(parser::Vec3f v1, parser::Vec3f v2){
 }
 
 float dotProduct(Vec3f v1,Vec3f v2){
-    return v1.x*v2.x+v1.y*v2.y+v1.z*v2.z;
+    return v1.x*v2.x   +   v1.y*v2.y   +   v1.z*v2.z;
 }
 
 
@@ -88,6 +88,7 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
         auto t2 = (-b+sqrt(discriminant))/(2.0*a);
 
         if(t1<0){
+            //p("empty Ray Intersect bc of wrong side");
             return emptyRayIntersect;
         }
         if(t1<t2){
@@ -98,7 +99,7 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
             shape.id = shapeId;
             shape.form = SPHERE;
             res.shape = shape;
-            res.intersectPoint ;//Find intersection point t1 TODO
+            //res.intersectPoint  ;//Find intersection point t1 TODO
             return res;
         }else{
             RayIntersect res;
@@ -108,7 +109,7 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
             shape.id = shapeId;
             shape.form = SPHERE;
             res.shape = shape;
-            res.intersectPoint ;//Find intersection point t2 TODO
+            //res.intersectPoint = 0.0 ;//Find intersection point t2 TODO
             return res;
         }
     }
@@ -122,10 +123,11 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
 RayIntersect checkSpheres(Ray ray,Scene scene,int cameraId){
 
     RayIntersect rayIntersect = emptyRayIntersect;
+    vector<RayIntersect> intersects = {};
     for(int i = 0;i<scene.spheres.size();i++){
         rayIntersect = checkOneSphere(ray, scene.spheres[i],i,cameraId,scene);
     }
-    return emptyRayIntersect; // t => mesafe katsayisi
+    return rayIntersect; // t => mesafe katsayisi
 
 
     
@@ -218,12 +220,12 @@ RayIntersect checkMeshes(Ray ray,Scene scene,int cameraId){
     
 RayIntersect getNearestIntersect(RayIntersect sphereInt, RayIntersect triangleInt,RayIntersect meshInt){
     vector<RayIntersect> distances = {};
-    // if(sphereInt.isThereIntersect)
-    //     distances.push_back(sphereInt);
+    if(sphereInt.isThereIntersect)
+        distances.push_back(sphereInt);
     if(triangleInt.isThereIntersect)
         distances.push_back(triangleInt);
-    // // if(meshInt.isThereIntersect)
-    // //     distances.push_back(meshInt);
+    if(meshInt.isThereIntersect)
+        distances.push_back(meshInt);
     if(distances.size()==0)
     {
         //return empty bg
@@ -240,7 +242,7 @@ RayIntersect getNearestIntersect(RayIntersect sphereInt, RayIntersect triangleIn
     return nearest;
 }
 
-RayIntersect getShapeIdThatIntersectsRay(Ray ray,Scene scene,int cameraId){ 
+RayIntersect getIntersect(Ray ray,Scene scene,int cameraId){ 
     auto sphereIntersect = checkSpheres(ray,scene,cameraId);//Returns the touch point,  id and type of the shape
     auto triangleIntersect = checkTriangles(ray, scene,cameraId); // ucgene degisyosa
     auto meshIntersect = checkMeshes(ray,scene,cameraId);   //meshe degiyosa
@@ -266,7 +268,7 @@ RayIntersect getShapeIdThatIntersectsRay(Ray ray,Scene scene,int cameraId){
 
 
 Vec3i checkWhatCollides(Ray ray,Scene scene,int cameraId ){
-    RayIntersect rayIntersect = getShapeIdThatIntersectsRay(ray,scene,cameraId);//idsini verir
+    RayIntersect rayIntersect = getIntersect(ray,scene,cameraId);//idsini verir
     //return getColorOfTheIntersection(rayIntersect, scene);
     Vec3i dolu = {
         .x=200,
