@@ -8,7 +8,7 @@ using namespace parser;
 
 
 void p(string a){
-    cout << a;
+    cout << a<<"\n";
 }
 void p(float f){
     cout<<f;
