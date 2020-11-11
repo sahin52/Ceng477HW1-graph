@@ -20,10 +20,10 @@ Vec3f cross(Vec3f v1, Vec3f v2)
     return result;
 }
 
-Vec3f normalize(Vec3f &v)
+Vec3f normalize(Vec3f v)
 {
     Vec3f result;
-    int uzunluk =  sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
+    float uzunluk =  sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
     result.x = v.x / uzunluk;
     result.y = v.y / uzunluk;
     result.z = v.z / uzunluk;
@@ -44,13 +44,12 @@ Ray generateRay(int row, int column, Camera cam)
     Vec3f vector_u = cross(gaze, cam.up);//Yana dogru
     vector_u = normalize(vector_u);
     Vec3f vector_v  = cross(vector_u, gaze);
-    vector_v = normalize(vector_v);//Yukari dogru cam.up
 
     //Planein merkezi
     Vec3f merkez;
     merkez.x = cam.position.x + gaze.x * cam.near_distance;
-    merkez.x = cam.position.y + gaze.y * cam.near_distance;
-    merkez.x = cam.position.z + gaze.z * cam.near_distance;
+    merkez.y = cam.position.y + gaze.y * cam.near_distance;
+    merkez.z = cam.position.z + gaze.z * cam.near_distance;
 
     //Planein sol en ustu
     Vec3f sol_en_ust;
