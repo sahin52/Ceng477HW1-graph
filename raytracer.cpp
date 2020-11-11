@@ -25,7 +25,7 @@ using namespace parser;
  */
 unsigned char * generateImages(Scene scene){
     for(int cam = 0; cam < scene.cameras.size(); cam++){
-        unsigned char * image;
+        unsigned char * image = new unsigned char[(scene.cameras[cam].image_height*scene.cameras[cam].image_width)];
         int width = scene.cameras[0].image_width;
         int height = scene.cameras[0].image_height;
         for(int i=0;i<width;i++){
@@ -122,6 +122,6 @@ int main(int argc, char* argv[])
     //     }
     // }
 
-    write_ppm("test.ppm", image, scene.cameras[0].image_width,scene.cameras[0].image_height);
+    //write_ppm("test.ppm", image, scene.cameras[0].image_width,scene.cameras[0].image_height);
 
 }
