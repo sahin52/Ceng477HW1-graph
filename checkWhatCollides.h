@@ -135,6 +135,14 @@ RayIntersect checkSpheres(Ray ray,Scene scene,int cameraId){
 
 
 //*******************************************///
+float determinant(const Vec3f &v0, const Vec3f &v1, const Vec3f &v2)
+{
+    return v0.x * (v1.y*v2.z - v2.y*v1.z)
+            + v0.y * (v2.x*v1.z - v1.x*v2.z)
+            + v0.z * (v1.x*v2.y - v1.y*v2.x);
+}
+
+//*******************************************///
 RayIntersect checkOneTriangle(Ray ray,Scene scene,int cameraId, int TriangleId){
     //TODO
     RayIntersect res;
@@ -150,7 +158,7 @@ RayIntersect checkOneTriangle(Ray ray,Scene scene,int cameraId, int TriangleId){
 
     //checking if direction of ray and normal are parallel
     float checkparallel = dotProduct(normalv, ray.yon);
-    if (fabs(checkparallel) == 0)
+    if (fabs(checkparallel) <= 0.00001)
     {
         res.isThereIntersect =false;
         return res;
@@ -160,7 +168,18 @@ RayIntersect checkOneTriangle(Ray ray,Scene scene,int cameraId, int TriangleId){
     float d = dotProduct(normalv, v0);
 
     // t is in the ray equation ---- ray = start + t*yon
-    float t = (dotProduct(normalv,ray.start) + d) / checkparallel ;
+    float t =  (dotProduct(normalv,ray.start) + d) / checkparallel ;
+
+    /*float detA = determinant(Vec3fminus(v0,v1), Vec3fminus(v0,v2), ray.yon);
+    if(detA == 0.0)
+    {
+        return res;
+    }
+
+    float t = (determinant(Vec3fminus(v0,v1), Vec3fminus(v0,v2), Vec3fminus(v0,ray.start)))/detA;
+    if(t <= 0.0) {
+        return res;
+    }*/
     
     //finding if intersected point inside of triangle
     Vec3f point;
@@ -172,16 +191,16 @@ RayIntersect checkOneTriangle(Ray ray,Scene scene,int cameraId, int TriangleId){
     Vec3f edge0, edge1, edge2;
     edge0 = Vec3fminus(v1,v0);
     edge1 = Vec3fminus(v2,v1);
-    edge2 = Vec3fminus(v0,v1);
+    edge2 = Vec3fminus(v0,v2);
 
     // dot product of "cross_of_point" and "normalv" is positive means
     // that point is in the correct side of edge
     Vec3f cross_of_point = cross(edge0, (Vec3fminus(point,v0)) );       /*  for edge0  */
-    if( dotProduct(normalv,cross_of_point)<0 ) return res;      /* erken bitirilebilir */
+    if( (dotProduct(normalv,cross_of_point))<0.0f ) return res;
     cross_of_point = cross(edge1, (Vec3fminus(point,v1)) );       /*  for edge1  */
-    if( dotProduct(normalv,cross_of_point)<0 ) return res;      /* erken bitirilebilir */
+    if( (dotProduct(normalv,cross_of_point))<0.0f ) return res;
     cross_of_point = cross(edge2, (Vec3fminus(point,v2)) );       /*  for edge2  */
-    if( dotProduct(normalv,cross_of_point)<0 ) return res;      /* erken bitirilebilir */
+    if( (dotProduct(normalv,cross_of_point))<0.0f ) return res;
 
     // if none of the ifs above true than point is inside triangle
     res.isThereIntersect = true;
