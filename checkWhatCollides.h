@@ -99,7 +99,11 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
             shape.id = shapeId;
             shape.form = SPHERE;
             res.shape = shape;
-            //res.intersectPoint  ;//Find intersection point t1 TODO
+            Vec3f intersectPoint;
+            intersectPoint.x = ray.start.x + t1*ray.yon.x;
+            intersectPoint.y = ray.start.y + t1*ray.yon.y;
+            intersectPoint.z = ray.start.z + t1*ray.yon.z;
+            res.intersectPoint = intersectPoint ;//Find intersection point t1 TODO
             return res;
         }else{
             RayIntersect res;
@@ -109,6 +113,11 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
             shape.id = shapeId;
             shape.form = SPHERE;
             res.shape = shape;
+            Vec3f intersectPoint;
+            intersectPoint.x = ray.start.x + t1*ray.yon.x;
+            intersectPoint.y = ray.start.y + t1*ray.yon.y;
+            intersectPoint.z = ray.start.z + t1*ray.yon.z;
+            res.intersectPoint = intersectPoint ;
             //res.intersectPoint = 0.0 ;//Find intersection point t2 TODO
             return res;
         }
@@ -174,7 +183,7 @@ RayIntersect checkOneTriangle(Ray ray,Scene scene,int cameraId, int TriangleId, 
         return res;
 
     float beta = (determinant(Vec3fminus(v0,ray.start), Vec3fminus(v0,v2), ray.yon)) / checkparallel ;
-    if(beta < 0 || beta > (1 - gamma))
+    if (beta + gamma > 1 || beta < 0  )
         return res;
 
  
