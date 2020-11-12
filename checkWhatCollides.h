@@ -261,12 +261,13 @@ RayIntersect checkMeshes(Ray ray,Scene scene,int cameraId){
 
 RayIntersect getNearestIntersect(RayIntersect sphereInt, RayIntersect triangleInt,RayIntersect meshInt){
     vector<RayIntersect> distances = {};
-    if(sphereInt.isThereIntersect)
-        distances.push_back(sphereInt);
+    
     if(triangleInt.isThereIntersect)
         distances.push_back(triangleInt);
     if(meshInt.isThereIntersect)
         distances.push_back(meshInt);
+    if(sphereInt.isThereIntersect)
+        distances.push_back(sphereInt);    
     if(distances.size()==0)
     {
         //return empty bg
@@ -276,7 +277,7 @@ RayIntersect getNearestIntersect(RayIntersect sphereInt, RayIntersect triangleIn
     }
     RayIntersect nearest = distances[0];
     for(auto i: distances){
-        if(i.lengthToTheOrigin<nearest.lengthToTheOrigin){
+        if(i.lengthToTheOrigin < nearest.lengthToTheOrigin){
             nearest = i;
         }
     }
@@ -307,23 +308,37 @@ RayIntersect getIntersect(Ray ray,Scene scene,int cameraId){
     
 }
 
-
+//Returns the color of the pixel
 Vec3i checkWhatCollides(Ray ray,Scene scene,int cameraId ){
     RayIntersect rayIntersect = getIntersect(ray,scene,cameraId);//idsini verir
+    //Vec3i res = getColorOfTheIntersection(rayIntersect, scene,cameraId,ray);
     //return getColorOfTheIntersection(rayIntersect, scene);
-
-    Vec3i dolu = {
-        .x=200,
-        .y=0,
-        .z=200
-    };
-    Vec3i bos =scene.background_color;
-
-    if(rayIntersect.isThereIntersect){
-        return dolu;
-    }else{
-        return bos;
+    int materialId = 0;
+    //p("sahinin kucuk");
+    if(rayIntersect.shape.form == SPHERE){
+        materialId = scene.spheres[rayIntersect.shape.id].material_id;
     }
+    if(rayIntersect.shape.form == TRIANGLE){
+        materialId = scene.triangles[rayIntersect.shape.id].material_id;
+    }
+    if(rayIntersect.shape.form == MESH){
+        materialId = scene.meshes[rayIntersect.shape.id].material_id;
+    }
+    //p("123");
+    //p(materialId);
+    if(rayIntersect.isThereIntersect) return {
+        .x=(int)(scene.ambient_light.x* scene.materials[materialId].diffuse.x ),
+        .y=(int)(scene.ambient_light.y* scene.materials[materialId].diffuse.y),
+        .z=(int)(scene.ambient_light.z* scene.materials[materialId].diffuse.z)
+    };
+
+    Vec3i bos = scene.background_color;
+
+
+//    p("3");
+
+        return bos;
+
     //res = aynaGolgeVsEkle(shape, scene, ray, cameraId);
     //return res;
 
