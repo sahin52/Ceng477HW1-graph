@@ -23,7 +23,7 @@ using namespace parser;
  * 
  * 
  */
-unsigned char * generateImages(Scene scene){
+void generateImages(Scene scene){
     for(int cam = 0; cam < scene.cameras.size(); cam++){
         unsigned char * image = new unsigned char[(scene.cameras[cam].image_height*scene.cameras[cam].image_width)* 3];
         int width = scene.cameras[0].image_width;
@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
     p(scene.spheres);
     p("\n");
 
-    unsigned char* image = generateImages(scene);
+    generateImages(scene);
 
     // // The code below creates a test pattern and writes
     // // it to a PPM file to demonstrate the usage of the
