@@ -1,3 +1,6 @@
+#ifndef __CHECKWHATCOLLIDES__
+#define __CHECKWHATCOLLIDES__
+
 #include <iostream>
 #include "parser.h"
 #include "ppm.h"
@@ -363,3 +366,6 @@ Vec3i checkWhatCollides(Ray ray,Scene scene,int cameraId ){
  * t katsayi ***
  * * direction
  */
+
+
+#endif

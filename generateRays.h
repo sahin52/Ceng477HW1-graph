@@ -1,3 +1,5 @@
+#ifndef __GENERATESRAYS__
+#define __GENERATESRAYS__
 #include "printer.h"
 
 #include <math.h>
@@ -78,3 +80,6 @@ Ray generateRay(int row, int column, Camera cam)
     return ray;
 }
 
+
+
+#endif

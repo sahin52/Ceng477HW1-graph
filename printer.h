@@ -1,3 +1,6 @@
+#ifndef __PRINTERH__
+#define __PRINTERH__
+
 #include <iostream>
 #include "parser.h"
 #include "ppm.h"
@@ -143,3 +146,6 @@ void p(std::vector<Camera> cams){
         p("\n ");
     }
 }
+
+
+#endif
