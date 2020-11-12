@@ -132,7 +132,12 @@ RayIntersect checkSpheres(Ray ray,Scene scene,int cameraId){
 
     
 }
-
+float determinant(Vec3f v0, const Vec3f v1, const Vec3f &v2)
+{
+    return v0.x * (v1.y*v2.z - v2.y*v1.z)
+            + v0.y * (v2.x*v1.z - v1.x*v2.z)
+            + v0.z * (v1.x*v2.y - v1.y*v2.x);
+}
 
 //*******************************************///
 
@@ -157,39 +162,27 @@ RayIntersect checkOneTriangle(Ray ray,Scene scene,int cameraId, int TriangleId, 
     {
         res.isThereIntersect =false;
         return res;
-    }      /* TODO       epsilon olacak  */
+    }
 
-    // d is in the plane equation ---- Ax + By + Cz + d = 0 
-    float d = dotProduct(normalv, v0);
+ // TODO unique code
+    float t = (determinant(Vec3fminus(v0,v1), Vec3fminus(v0,v2), Vec3fminus(v0,ray.start))) / checkparallel ;
+    if(t <= 0.0f)
+        return res;
 
-    // t is in the ray equation ---- ray = start + t*yon
-    float t =  (dotProduct(normalv,ray.start) + d) / checkparallel ;
+    float gamma = (determinant(Vec3fminus(v0,v1),Vec3fminus(v0,ray.start), ray.yon)) / checkparallel ;
+    if(gamma < 0 || gamma > 1)
+        return res;
 
-    
+    float beta = (determinant(Vec3fminus(v0,ray.start), Vec3fminus(v0,v2), ray.yon)) / checkparallel ;
+    if(beta < 0 || beta > (1 - gamma))
+        return res;
+
+ 
     //finding if intersected point inside of triangle
     Vec3f point;
     point.x = ray.start.x + t*ray.yon.x ;
     point.y = ray.start.y + t*ray.yon.y ;
     point.z = ray.start.z + t*ray.yon.z ;
-
-    //point should be inside 3 edges
-    Vec3f edge0, edge1, edge2;
-    edge0 = Vec3fminus(v1,v0);
-    edge1 = Vec3fminus(v2,v1);
-    edge2 = Vec3fminus(v0,v2);
-
-    // dot product of "cross_of_point" and "normalv" is positive means
-    // that point is in the correct side of edge
-    Vec3f cross_of_point;
-    
-    cross_of_point = cross(edge0, (Vec3fminus(point,v0)) );       /*  for edge0  */
-    if( (dotProduct(normalv,cross_of_point))<0.0f ) return res;
-    
-    cross_of_point = cross(edge1, (Vec3fminus(point,v1)) );       /*  for edge1  */
-    if( (dotProduct(normalv,cross_of_point))<0.0f ) return res;
-    
-    cross_of_point = cross(edge2, (Vec3fminus(point,v2)) );       /*  for edge2  */
-    if( (dotProduct(normalv,cross_of_point))<0.0f ) return res;
 
     // if none of the ifs above true than point is inside triangle
     res.isThereIntersect = true;
@@ -309,16 +302,13 @@ RayIntersect getIntersect(Ray ray,Scene scene,int cameraId){
 Vec3i checkWhatCollides(Ray ray,Scene scene,int cameraId ){
     RayIntersect rayIntersect = getIntersect(ray,scene,cameraId);//idsini verir
     //return getColorOfTheIntersection(rayIntersect, scene);
+
     Vec3i dolu = {
         .x=200,
         .y=0,
         .z=200
     };
-    Vec3i bos = {
-        .x=0,
-        .y=200,
-        .z=100
-    };
+    Vec3i bos =scene.background_color;
 
     if(rayIntersect.isThereIntersect){
         return dolu;
