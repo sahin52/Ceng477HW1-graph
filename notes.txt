@@ -1,0 +1,4 @@
+rayleri hesapladık, raylerin carptigi cisimleri bulduk
+şimdi, çarpma noktaları, çarptığı yerin gelen ray'e göre açısı gerekiyor.
+bir de rayin aynadan yansıdığı yön de önemli.
+bu üç bilgi de olursa oraya gelen toplam ışığı ve buradan yansıyan ray'e gelen ışığı bulabiliriz.
