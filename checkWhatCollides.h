@@ -156,6 +156,8 @@ RayIntersect checkOneTriangle(Ray ray,Scene scene,int cameraId, int TriangleId, 
     //TODO
     RayIntersect res;
     res.isThereIntersect = false;
+    //res.lengthToTheOrigin;
+    //res.intersectPoint;
 
     Vec3f v0 = scene.vertex_data[triangle.indices.v0_id-1];
     Vec3f v1 = scene.vertex_data[triangle.indices.v1_id-1];
@@ -193,12 +195,16 @@ RayIntersect checkOneTriangle(Ray ray,Scene scene,int cameraId, int TriangleId, 
     point.y = ray.start.y + t*ray.yon.y ;
     point.z = ray.start.z + t*ray.yon.z ;
 
+    float length = sqrt((point.x-ray.start.x)*(point.x-ray.start.x)+(point.y-ray.start.y)*(point.y-ray.start.y)+(point.z-ray.start.z)*(point.z-ray.start.z));
+
     // if none of the ifs above true than point is inside triangle
     res.isThereIntersect = true;
+    res.lengthToTheOrigin = length;
     res.intersectPoint = point;
     res.shape.form=TRIANGLE;
     res.shape.id = TriangleId;
-    
+
+
     return res;
 }
 RayIntersect checkTriangles(Ray ray,Scene scene,int cameraId){
@@ -206,7 +212,7 @@ RayIntersect checkTriangles(Ray ray,Scene scene,int cameraId){
 
     RayIntersect rayIntersect = emptyRayIntersect;
 
-    for(int i=0;i<scene.triangles.size();i++){ //TODO triangle id ile sira ayni olmayabilir
+    for(int i=0;i<scene.triangles.size();i++){ //TODO triangle id ile sira ayni olmayabilir bir de tum ucgenleri deneyip return etmeli
         rayIntersect = checkOneTriangle(ray,scene,cameraId, i, scene.triangles[i]);
     }
     return rayIntersect;
@@ -275,6 +281,7 @@ RayIntersect getNearestIntersect(RayIntersect sphereInt, RayIntersect triangleIn
     }else{
         //p("intersect at nearest");
     }
+    //TODO lengthToTheOrigin hatali birisinde
     RayIntersect nearest = distances[0];
     for(auto i: distances){
         if(i.lengthToTheOrigin < nearest.lengthToTheOrigin){
