@@ -30,6 +30,13 @@ Vec3f Vec3fMultiply(Vec3f vec, float sayi){
     res.z = vec.z*sayi;
     return res;
 }
+Vec3f Vec3fSum(Vec3f v1, Vec3f v2){
+    Vec3f res;
+    res.x = v1.x+v2.x;
+    res.y = v1.y+v2.y;
+    res.z = v1.z + v2.z; 
+    return res;
+}
 float getLength(Vec3f v){
    return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
