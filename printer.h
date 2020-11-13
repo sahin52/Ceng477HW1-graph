@@ -1,10 +1,8 @@
 #ifndef __PRINTERH__
 #define __PRINTERH__
 
-#include <iostream>
-#include "parser.h"
-#include "ppm.h"
 
+#include "utils.h"
 
 using namespace std;
 using namespace parser;

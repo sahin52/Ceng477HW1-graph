@@ -51,15 +51,17 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
             RayIntersect res;
             res.isThereIntersect = true;
             res.lengthToTheOrigin = t1;
-            Shape shape;
-            shape.id = shapeId;
-            shape.form = SPHERE;
-            res.shape = shape;
-            Vec3f intersectPoint;
-            intersectPoint.x = ray.start.x + t1*ray.yon.x;
-            intersectPoint.y = ray.start.y + t1*ray.yon.y;
-            intersectPoint.z = ray.start.z + t1*ray.yon.z;
-            res.intersectPoint = intersectPoint ;//Find intersection point t1 TODO
+            //Shape shape;
+            res.shape.id = shapeId;
+            res.shape.form = SPHERE;
+            //res.shape = shape;
+            // Vec3f intersectPoint;
+            res.intersectPoint.x = ray.start.x + t1*ray.yon.x;
+            res.intersectPoint.y = ray.start.y + t1*ray.yon.y;
+            res.intersectPoint.z = ray.start.z + t1*ray.yon.z;
+            //res.intersectPoint = intersectPoint ;//Find intersection point t1 TODO
+            res.normal = Vec3fminus(res.intersectPoint, center);
+
             return res;
         }else{
             RayIntersect res;
@@ -75,6 +77,8 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
             intersectPoint.z = ray.start.z + t1*ray.yon.z;
             res.intersectPoint = intersectPoint ;
             //res.intersectPoint = 0.0 ;//Find intersection point t2 TODO
+            res.normal = Vec3fminus(res.intersectPoint, center);
+            res.normal = Vec3fDivision(res.normal,radius);
             return res;
         }
     }
@@ -85,7 +89,7 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
 /** Checks all spheres and returns the nearest RayIntersect To the camera
  * 
 */
-RayIntersect checkSpheres(Ray ray,Scene scene,int cameraId){
+RayIntersect checkSpheres(Ray ray,Scene scene,int cameraId){ //TODO normalini de hesapla
 
     RayIntersect rayIntersect = emptyRayIntersect;
     vector<RayIntersect> intersects = {};
@@ -154,6 +158,7 @@ RayIntersect checkOneTriangle(Ray ray,Scene scene,int cameraId, int TriangleId, 
     float length = sqrt((point.x-ray.start.x)*(point.x-ray.start.x)+(point.y-ray.start.y)*(point.y-ray.start.y)+(point.z-ray.start.z)*(point.z-ray.start.z));
 
     // if none of the ifs above true than point is inside triangle
+    res.normal = normalv;
     res.isThereIntersect = true;
     res.lengthToTheOrigin = length;
     res.intersectPoint = point;
@@ -275,36 +280,12 @@ RayIntersect getIntersect(Ray ray,Scene scene,int cameraId){
 Vec3i checkWhatCollides(Ray ray,Scene scene,int cameraId ){
     RayIntersect rayIntersect = getIntersect(ray,scene,cameraId);//idsini verir
     //return getColorOfTheIntersection(rayIntersect, scene);
-    int materialId = 0;
-    //p("sahinin kucuk");
-    if(rayIntersect.shape.form == SPHERE){
-        materialId = scene.spheres[rayIntersect.shape.id].material_id;
-    }
-    if(rayIntersect.shape.form == TRIANGLE){
-        materialId = scene.triangles[rayIntersect.shape.id].material_id;
-    }
-    if(rayIntersect.shape.form == MESH){
-        materialId = scene.meshes[rayIntersect.shape.id].material_id;
-    }
+    
     //p("123");
     //p(materialId);
     Vec3i res = getColorOfTheIntersection(rayIntersect, scene,cameraId,ray);
 
-    if(rayIntersect.isThereIntersect) return {
-        .x=(int)(scene.ambient_light.x* scene.materials[materialId].diffuse.x ),
-        .y=(int)(scene.ambient_light.y* scene.materials[materialId].diffuse.y),
-        .z=(int)(scene.ambient_light.z* scene.materials[materialId].diffuse.z)
-    };
-
-    Vec3i bos = scene.background_color;
-
-
-//    p("3");
-
-        return bos;
-
-    //res = aynaGolgeVsEkle(shape, scene, ray, cameraId);
-    //return res;
+    return res;
 
 }
 

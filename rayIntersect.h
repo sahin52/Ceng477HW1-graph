@@ -26,6 +26,7 @@ struct RayIntersect{
     float lengthToTheOrigin;//This can be the length to the origin
     bool isThereIntersect;//false ise bg
     Vec3f intersectPoint;
+    Vec3f normal;
 };
 Shape emptyshape;
 Vec3f emptyPoint;
