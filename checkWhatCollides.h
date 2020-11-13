@@ -1,54 +1,7 @@
 #ifndef __CHECKWHATCOLLIDES__
 #define __CHECKWHATCOLLIDES__
-
-#include <iostream>
-#include "parser.h"
-#include "ppm.h"
-#include "generateRays.h"
-//#include "generateRays.cpp"
-
-
-using namespace std;
-using namespace parser;
-
-enum Form{
-    MESH,
-    TRIANGLE,
-	SPHERE    
-};
-
-struct Shape{
-    Form form;
-    int id;
-};
-
-struct RayIntersect{
-    Shape shape;
-    float lengthToTheOrigin;//This can be the length to the origin
-    bool isThereIntersect;//false ise bg
-    Vec3f intersectPoint;
-};
-Shape emptyshape;
-Vec3f emptyPoint;
-const RayIntersect emptyRayIntersect = {
-    .shape= emptyshape,
-    .lengthToTheOrigin=-1.,
-    .isThereIntersect = false,
-    .intersectPoint = emptyPoint,
-};
-parser::Vec3f Vec3fminus(parser::Vec3f v1, parser::Vec3f v2){
-    parser::Vec3f res;
-    res.x = v1.x-v2.x;
-    res.y = v1.y-v2.y;
-    res.z = v1.z-v2.z;
-    return res;
-}
-
-float dotProduct(Vec3f v1,Vec3f v2){
-    return v1.x*v2.x   +   v1.y*v2.y   +   v1.z*v2.z;
-}
-
-
+#include "rayIntersect.h"
+#include "getColor.h"
 
 Vec3i aynaGolgeVsEkle(Shape shape, Scene scene,Ray ray, int cameraNum){///bunsuz paint olur
     Vec3i res;
@@ -321,7 +274,7 @@ RayIntersect getIntersect(Ray ray,Scene scene,int cameraId){
 //Returns the color of the pixel
 Vec3i checkWhatCollides(Ray ray,Scene scene,int cameraId ){
     RayIntersect rayIntersect = getIntersect(ray,scene,cameraId);//idsini verir
-    //Vec3i res = getColorOfTheIntersection(rayIntersect, scene,cameraId,ray);
+    Vec3i res = getColorOfTheIntersection(rayIntersect, scene,cameraId,ray);
     //return getColorOfTheIntersection(rayIntersect, scene);
     int materialId = 0;
     //p("sahinin kucuk");
