@@ -2,7 +2,6 @@
 #define __GENERATESRAYS__
 #include "printer.h"
 
-#include <math.h>
 
 struct RaySabitleri{
     Vec3f vector_u;

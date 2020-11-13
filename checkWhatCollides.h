@@ -10,7 +10,7 @@ Vec3i aynaGolgeVsEkle(Shape shape, Scene scene,Ray ray, int cameraNum){///bunsuz
 /**
  * returns the collision point and; type and id of the shape if a collision happens
  */
-RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Scene scene){
+RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, Scene scene){
     //TODO
     //P = point on the sphere, C is center, r is radius
     // ∥P−C∥2=r2  //sphere 
@@ -61,7 +61,7 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
             res.intersectPoint.z = ray.start.z + t1*ray.yon.z;
             //res.intersectPoint = intersectPoint ;//Find intersection point t1 TODO
             res.normal = Vec3fminus(res.intersectPoint, center);
-
+            res.normal = Vec3fDivision(res.normal,radius);
             return res;
         }else{
             RayIntersect res;
@@ -89,30 +89,25 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, int cameraId, Sc
 /** Checks all spheres and returns the nearest RayIntersect To the camera
  * 
 */
-RayIntersect checkSpheres(Ray ray,Scene scene,int cameraId){ //TODO normalini de hesapla
+RayIntersect checkSpheres(Ray ray,Scene scene){ //TODO normalini de hesapla
 
     RayIntersect rayIntersect = emptyRayIntersect;
     vector<RayIntersect> intersects = {};
     for(int i = 0;i<scene.spheres.size();i++){
-        rayIntersect = checkOneSphere(ray, scene.spheres[i],i,cameraId,scene);
+        rayIntersect = checkOneSphere(ray, scene.spheres[i],i,scene);
     }
     return rayIntersect; // t => mesafe katsayisi
 
 
     
 }
-float determinant(Vec3f v0, const Vec3f v1, const Vec3f &v2)
-{
-    return v0.x * (v1.y*v2.z - v2.y*v1.z)
-            + v0.y * (v2.x*v1.z - v1.x*v2.z)
-            + v0.z * (v1.x*v2.y - v1.y*v2.x);
-}
+
 
 //*******************************************///
 
 
 //*******************************************///
-RayIntersect checkOneTriangle(Ray ray,Scene scene,int cameraId, int TriangleId, Triangle triangle){
+RayIntersect checkOneTriangle(Ray ray,Scene scene, int TriangleId, Triangle triangle){
     //TODO
     RayIntersect res;
     res.isThereIntersect = false;
@@ -168,13 +163,13 @@ RayIntersect checkOneTriangle(Ray ray,Scene scene,int cameraId, int TriangleId, 
 
     return res;
 }
-RayIntersect checkTriangles(Ray ray,Scene scene,int cameraId){
+RayIntersect checkTriangles(Ray ray,Scene scene){
     // RayIntersect checkOneTriangle(Ray ray,Triangle triangle,int cameraId);
 
     RayIntersect rayIntersect = emptyRayIntersect;
 
     for(int i=0;i<scene.triangles.size();i++){ //TODO triangle id ile sira ayni olmayabilir bir de tum ucgenleri deneyip return etmeli
-        rayIntersect = checkOneTriangle(ray,scene,cameraId, i, scene.triangles[i]);
+        rayIntersect = checkOneTriangle(ray,scene, i, scene.triangles[i]);
     }
     return rayIntersect;
 };
@@ -191,7 +186,7 @@ RayIntersect checkOneMesh(Ray ray,Mesh mesh,int meshId,int cameraId,Scene scene)
         tempTriangle.indices.v1_id=face.v1_id;
         tempTriangle.indices.v2_id=face.v2_id;
         tempTriangle.material_id = mesh.material_id;
-        res = checkOneTriangle(ray,scene,cameraId,1,tempTriangle);
+        res = checkOneTriangle(ray,scene,cameraId,tempTriangle);
         res.shape.form = MESH;
         res.shape.id = meshId;
         if(res.isThereIntersect)
@@ -253,8 +248,8 @@ RayIntersect getNearestIntersect(RayIntersect sphereInt, RayIntersect triangleIn
 }
 
 RayIntersect getIntersect(Ray ray,Scene scene,int cameraId){ 
-    auto sphereIntersect = checkSpheres(ray,scene,cameraId);//Returns the touch point,  id and type of the shape
-    auto triangleIntersect = checkTriangles(ray, scene,cameraId); // ucgene degisyosa
+    auto sphereIntersect = checkSpheres(ray,scene);//Returns the touch point,  id and type of the shape
+    auto triangleIntersect = checkTriangles(ray, scene); // ucgene degisyosa
     auto meshIntersect = checkMeshes(ray,scene,cameraId);   //meshe degiyosa
     // if(sphereIntersect.isThereIntersect){
     //     p("sphere intersect");
@@ -279,7 +274,7 @@ RayIntersect getIntersect(Ray ray,Scene scene,int cameraId){
 //Returns the color of the pixel
 Vec3i checkWhatCollides(Ray ray,Scene scene,int cameraId ){
     RayIntersect rayIntersect = getIntersect(ray,scene,cameraId);//idsini verir
-    //return getColorOfTheIntersection(rayIntersect, scene);
+    return getColorOfTheIntersection(rayIntersect, scene,cameraId,ray);
     
     //p("123");
     //p(materialId);
