@@ -12,7 +12,30 @@ using namespace parser;
 //     cout << "slm\n";
 //     cout << t; 
 // }
+RaySabitleri rayiHazirla(Camera cam){
+    Vec3f gaze =  normalize(cam.gaze);
+    Vec3f vector_u = cross(gaze, cam.up);//Yana dogru
+    vector_u = normalize(vector_u);
+    Vec3f vector_v  = cross(vector_u, gaze);
 
+    //Planein merkezi
+    Vec3f merkez;
+    merkez.x = cam.position.x + gaze.x * cam.near_distance;
+    merkez.y = cam.position.y + gaze.y * cam.near_distance;
+    merkez.z = cam.position.z + gaze.z * cam.near_distance;
+
+    //Planein sol en ustu
+    Vec3f sol_en_ust;
+    sol_en_ust.x = merkez.x + vector_u.x*cam.near_plane.x + vector_v.x*cam.near_plane.w ;
+    sol_en_ust.y = merkez.y + vector_u.y*cam.near_plane.x + vector_v.y*cam.near_plane.w ;
+    sol_en_ust.z = merkez.z + vector_u.z*cam.near_plane.x + vector_v.z*cam.near_plane.w ;
+    //Gaze, vector_u vector_v sol_en_ust
+    RaySabitleri res;
+    res.vector_u = vector_u;
+    res.vector_v = vector_v;
+    res.sol_en_ust = sol_en_ust;
+    return res;
+}
 
 
 
@@ -25,12 +48,14 @@ using namespace parser;
  */
 void generateImages(Scene scene){
     for(int cam = 0; cam < scene.cameras.size(); cam++){
+
+        RaySabitleri raySabitleri = rayiHazirla(scene.cameras[cam]);
         unsigned char * image = new unsigned char[(scene.cameras[cam].image_height*scene.cameras[cam].image_width)* 3];
         int width = scene.cameras[0].image_width;
         int height = scene.cameras[0].image_height;
         for(int i=0;i<height;i++){
             for(int j=0;j<width;j++){
-                auto ray  = generateRay(i,j,scene.cameras[cam]);
+                auto ray  = generateRay(i,j,scene.cameras[cam], raySabitleri);
                 // if(i%100==0 && j%100==0) {
                     
                 //     std::cout << i << " " << j<< " " << ray.yon.x << " ";

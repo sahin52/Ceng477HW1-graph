@@ -4,7 +4,11 @@
 
 #include <math.h>
 
-
+struct RaySabitleri{
+    Vec3f vector_u;
+    Vec3f vector_v;
+    Vec3f sol_en_ust;
+};
 struct Ray
 {
     bool isShading;
@@ -40,25 +44,11 @@ Vec3f normalize(Vec3f v)
  * 
  * 
 */
-Ray generateRay(int row, int column, Camera cam)
+Ray generateRay(int row, int column, Camera cam, RaySabitleri raySabitleri)
 {
-    Vec3f gaze =  normalize(cam.gaze);
-    Vec3f vector_u = cross(gaze, cam.up);//Yana dogru
-    vector_u = normalize(vector_u);
-    Vec3f vector_v  = cross(vector_u, gaze);
-
-    //Planein merkezi
-    Vec3f merkez;
-    merkez.x = cam.position.x + gaze.x * cam.near_distance;
-    merkez.y = cam.position.y + gaze.y * cam.near_distance;
-    merkez.z = cam.position.z + gaze.z * cam.near_distance;
-
-    //Planein sol en ustu
-    Vec3f sol_en_ust;
-    sol_en_ust.x = merkez.x + vector_u.x*cam.near_plane.x + vector_v.x*cam.near_plane.w ;
-    sol_en_ust.y = merkez.y + vector_u.y*cam.near_plane.x + vector_v.y*cam.near_plane.w ;
-    sol_en_ust.z = merkez.z + vector_u.z*cam.near_plane.x + vector_v.z*cam.near_plane.w ;
-
+    Vec3f vector_u = raySabitleri.vector_u;
+    Vec3f vector_v = raySabitleri.vector_v;
+    Vec3f sol_en_ust = raySabitleri.sol_en_ust;
     //leftten pixele olan mesafe
     float yatay_pixel_mesafesi = (cam.near_plane.y - cam.near_plane.x) * (column + 0.5) / cam.image_width ;
     //yukaridan pixele olan mesafe

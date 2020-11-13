@@ -274,7 +274,6 @@ RayIntersect getIntersect(Ray ray,Scene scene,int cameraId){
 //Returns the color of the pixel
 Vec3i checkWhatCollides(Ray ray,Scene scene,int cameraId ){
     RayIntersect rayIntersect = getIntersect(ray,scene,cameraId);//idsini verir
-    Vec3i res = getColorOfTheIntersection(rayIntersect, scene,cameraId,ray);
     //return getColorOfTheIntersection(rayIntersect, scene);
     int materialId = 0;
     //p("sahinin kucuk");
@@ -289,6 +288,8 @@ Vec3i checkWhatCollides(Ray ray,Scene scene,int cameraId ){
     }
     //p("123");
     //p(materialId);
+    Vec3i res = getColorOfTheIntersection(rayIntersect, scene,cameraId,ray);
+
     if(rayIntersect.isThereIntersect) return {
         .x=(int)(scene.ambient_light.x* scene.materials[materialId].diffuse.x ),
         .y=(int)(scene.ambient_light.y* scene.materials[materialId].diffuse.y),
