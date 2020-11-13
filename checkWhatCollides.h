@@ -2,6 +2,7 @@
 #define __CHECKWHATCOLLIDES__
 #include "getColor.h"
 
+
 RayIntersect getNearestIntersect(RayIntersect sphereInt, RayIntersect triangleInt,RayIntersect meshInt){
     vector<RayIntersect> distances = {};
     

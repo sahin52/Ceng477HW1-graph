@@ -1,6 +1,5 @@
 #ifndef __GETCOLOR__
 #define __GETCOLOR__
-#include "rayIntersect.h"
 #include "checkShapes.h"
 //#include "generateRays.cpp"
 using namespace std;
@@ -99,7 +98,7 @@ Vec3f addLightFromLightSources(RayIntersect rayIntersect,Scene scene, int camera
             };
         }else{  //isik vuruyor, o isiktan gelen isik degerlerini ekle
         pixelAsFloat = Vec3fSum(pixelAsFloat, Diffuse(currentLight, scene.materials, materialId, rayIntersect) );
-        pixelAsFloat =Vec3fSum(pixelAsFloat, Specular(currentLight, ,ray, scene, caeraId,,materialId))       ;
+        pixelAsFloat =Vec3fSum(pixelAsFloat, Specular(currentLight, rayIntersect, scene, cameraId,materialId))       ;
         }
     }
     return pixelAsFloat;

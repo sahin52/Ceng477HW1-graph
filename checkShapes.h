@@ -1,8 +1,6 @@
 #ifndef __CHECKSHAPES__
 #define __CHECKSHAPES__
 #include "rayIntersect.h"
-#include "getColor.h"
-
 
 
 
@@ -90,7 +88,7 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, Scene scene){
 */
 RayIntersect checkSpheres(Ray ray,Scene scene){ //TODO normalini de hesapla
 
-    RayIntersect rayIntersect = emptyRayInterect;
+    RayIntersect rayIntersect = emptyRayIntersect;
     vector<RayIntersect> intersects = {};
     for(int i = 0;i<scene.spheres.size();i++){
         rayIntersect = checkOneSphere(ray, scene.spheres[i],i,scene);
