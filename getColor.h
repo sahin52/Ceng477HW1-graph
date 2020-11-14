@@ -7,11 +7,12 @@ using namespace parser;
 
 Vec3f Irradiance(PointLight light, Vec3f point){
     float length = getDistance(light.position, point);
+    float length_kare = length * length;
     //TODO sifirsa napcaz
     Vec3f res ;
-    res.x = light.intensity.x / length / length;
-    res.y = light.intensity.y / length / length;
-    res.z = light.intensity.z / length / length;
+    res.x = light.intensity.x / length_kare;
+    res.y = light.intensity.y / length_kare;
+    res.z = light.intensity.z / length_kare;
     
     return res;
 }
@@ -34,9 +35,10 @@ Vec3f Specular(PointLight light, RayIntersect rayIntersect, Scene scene, int cam
     
     Vec3f recieved_irr = Irradiance(light, rayIntersect.intersectPoint);
     Vec3f w_i = normalize(Vec3fminus(light.position, rayIntersect.intersectPoint));
-    Vec3f w_0 = Vec3fminus(scene.cameras[cam_id].position, rayIntersect.intersectPoint);
+    Vec3f w_0 = normalize(Vec3fminus(scene.cameras[cam_id].position, rayIntersect.intersectPoint));
 
-    float square_l = dotProduct(Vec3fSum( w_i, w_0), Vec3fSum( w_i, w_0)  );
+    float square_l = dotProduct(Vec3fSum( w_i, w_0), Vec3fSum( w_i, w_0)  ); 
+
     Vec3f half_v ;
     half_v.x = (w_i.x + w_0.x) / square_l;
     half_v.y = (w_i.y + w_0.y) / square_l;
@@ -63,16 +65,21 @@ bool golgedemi(Vec3f pointToCheck,Scene scene,PointLight currentLight){
     ray.isShading;
     RayIntersect sphereIntersect = checkSpheres(ray,scene);
     //RayIntersect rayIntersect; //uzunluktan gitmek gerek ilk carpma noktasina
-    if(sphereIntersect.isThereIntersect && sphereIntersect.lengthToTheOrigin<(getDistance(pointToCheck,currentLight.position)+scene.shadow_ray_epsilon*10)){
+    if(sphereIntersect.isThereIntersect && 
+            sphereIntersect.lengthToTheOrigin<(getDistance(pointToCheck,currentLight.position)-scene.shadow_ray_epsilon)){
+        // p("---------");
+        // p(scene.shadow_ray_epsilon);
+        // p(sphereIntersect.lengthToTheOrigin);
+        // p(getDistance(pointToCheck,currentLight.position));
         return true;
     }
     
     RayIntersect triangleIntersect = checkTriangles(ray,scene);
-    if(triangleIntersect.isThereIntersect && triangleIntersect.lengthToTheOrigin<(getDistance(pointToCheck,currentLight.position)+scene.shadow_ray_epsilon*10)){
+    if(triangleIntersect.isThereIntersect && triangleIntersect.lengthToTheOrigin<(getDistance(pointToCheck,currentLight.position)-scene.shadow_ray_epsilon*10)){
         return true;
     }
     RayIntersect meshIntersect = checkMeshes(ray,scene,1);
-    if(meshIntersect.isThereIntersect && meshIntersect.lengthToTheOrigin<(getDistance(pointToCheck,currentLight.position)+scene.shadow_ray_epsilon*10)){
+    if(meshIntersect.isThereIntersect && meshIntersect.lengthToTheOrigin<(getDistance(pointToCheck,currentLight.position)-scene.shadow_ray_epsilon*10)){
         return true;
     }
 
@@ -93,16 +100,12 @@ Vec3f addLightFromLightSources(RayIntersect rayIntersect,Scene scene, int camera
 
     for(int i=0;i<numberOfLights;i++){
         PointLight currentLight = scene.point_lights[i];
-        // if(golgedemi(rayIntersect.intersectPoint, scene, currentLight)){ //Golgede kalmis do nothing
-        //     return {
-        //         128.,
-        //         128.,
-        //         128.,
-        //     };
-        // }else{  //isik vuruyor, o isiktan gelen isik degerlerini ekle
-        pixelAsFloat = Vec3fSum(pixelAsFloat, Diffuse(currentLight, scene.materials, materialId, rayIntersect) );
-        pixelAsFloat = Vec3fSum(pixelAsFloat, Specular(currentLight, rayIntersect, scene, cameraId,materialId,ray))       ;
-        // }
+        if(golgedemi(rayIntersect.intersectPoint, scene, currentLight)){ //Golgede kalmis do nothing
+            return pixelAsFloat;
+        }else{  //isik vuruyor, o isiktan gelen isik degerlerini ekle
+            pixelAsFloat = Vec3fSum(pixelAsFloat, Diffuse(currentLight, scene.materials, materialId, rayIntersect) );
+            pixelAsFloat = Vec3fSum(pixelAsFloat, Specular(currentLight, rayIntersect, scene, cameraId,materialId,ray))       ;
+        }
     }
     return pixelAsFloat;
 }
@@ -165,10 +168,6 @@ Vec3i getColorOfTheIntersection(RayIntersect rayIntersect,Scene scene,int camera
     ///return{0,0,0};//TODO
 
 }
-
-
-
-
 
 
 

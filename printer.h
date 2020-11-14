@@ -12,16 +12,16 @@ void p(string a){
     cout << a<<"\n";
 }
 void p(float f){
-    cout<<f;
+    cout<<f<<"\n";
 }
 void p(parser::Vec3i v){ //Prints vector
     cout <<"< " << v.x << " " << v.y << " " << v.z << " >";
 }
 void p(parser::Vec3f v){ //Prints vector
-    cout <<"" << v.x << " " << v.y << " " << v.z ;
+    cout <<"" << v.x << " " << v.y << " " << v.z <<"\n";
 }
 void p(Vec4f v){
-    cout << v.w << " " << v.x << " "<<   v.y << " " <<v.z;
+    cout << v.w << " " << v.x << " "<<   v.y << " " <<v.z<<"\n";
 }
 void p(vector<PointLight> point_lights){
     for(auto i: point_lights){
@@ -56,12 +56,7 @@ void p(std::vector<Material> materials){
 }
 
 void p(Face face){
-    p(face.v0_id);
-    p(" -- ");
-    p(face.v1_id);
-    p(" -- ");
-    p(face.v2_id);
-    p("|");
+    cout << face.v0_id<<" -- " << face.v1_id << " -- " << face.v2_id << "|" << "\n";
 }
 void p(std::vector<Vec3f> vertex_data) {
     for(auto i: vertex_data){

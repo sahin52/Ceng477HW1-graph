@@ -79,7 +79,11 @@ void generateImages(Scene scene){
         int width = scene.cameras[0].image_width;
         int height = scene.cameras[0].image_height;
         for(int i=0;i<height;i++){
+            //if(i%(height/100)==0)
+                p("image creating boss..."+to_string(i)+"/"+to_string(height));
             for(int j=0;j<width;j++){
+                
+
                 auto ray  = generateRay(i,j,scene.cameras[cam], raySabitleri);
                 // if(i%100==0 && j%100==0) {
                     
