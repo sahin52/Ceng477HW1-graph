@@ -31,7 +31,7 @@ Vec3f Diffuse(PointLight light, std::vector<Material> materials, int mat_id, Ray
     };
 }
 
-Vec3f Specular(PointLight light, RayIntersect rayIntersect, Scene scene, int cam_id, int mat_id,Ray ray){
+Vec3f Specular(PointLight light, RayIntersect rayIntersect, Scene scene, int cam_id, int mat_id){
     
     Vec3f recieved_irr = Irradiance(light, rayIntersect.intersectPoint);
     Vec3f w_i = normalize(Vec3fminus(light.position, rayIntersect.intersectPoint));
@@ -104,7 +104,7 @@ Vec3f addLightFromLightSources(RayIntersect rayIntersect,Scene scene, int camera
             return pixelAsFloat;
         }else{  //isik vuruyor, o isiktan gelen isik degerlerini ekle
             pixelAsFloat = Vec3fSum(pixelAsFloat, Diffuse(currentLight, scene.materials, materialId, rayIntersect) );
-            pixelAsFloat = Vec3fSum(pixelAsFloat, Specular(currentLight, rayIntersect, scene, cameraId,materialId,ray))       ;
+            //pixelAsFloat = Vec3fSum(pixelAsFloat, Specular(currentLight, rayIntersect, scene, cameraId,materialId,ray))       ;
         }
     }
     return pixelAsFloat;

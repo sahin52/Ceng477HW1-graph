@@ -134,21 +134,23 @@ RayIntersect checkOneTriangle(Ray ray,Scene scene, int TriangleId, Triangle tria
 
     //checking if direction of ray and normal are parallel
     float checkparallel = dotProduct(normalv, ray.yon);
-    if (fabs(checkparallel) <= 0.00001)
+    if (fabs(checkparallel) <= 0.0001)
     {
         return res;
     }
 
-
-    float t = (determinant(Vec3fminus(v0,v1), Vec3fminus(v0,v2), Vec3fminus(v0,ray.start))) / checkparallel ;
+    Vec3f v0_v2 = Vec3fminus(v0,v2);
+    Vec3f v0_start = Vec3fminus(v0,ray.start);
+    Vec3f v0_v1 = Vec3fminus(v0,v1);
+    float t = (determinant(v0_v1, v0_v2, v0_start)) / checkparallel ;
     if(t <= 0.0f)
         return res;
 
-    float gamma = (determinant(Vec3fminus(v0,v1),Vec3fminus(v0,ray.start), ray.yon)) / checkparallel ;
+    float gamma = (determinant(v0_v1,v0_start, ray.yon)) / checkparallel ;
     if(gamma < 0 || gamma > 1)
         return res;
 
-    float beta = (determinant(Vec3fminus(v0,ray.start), Vec3fminus(v0,v2), ray.yon)) / checkparallel ;
+    float beta = (determinant(v0_start,v0_v2,ray.yon)) / checkparallel ;
     if (beta + gamma > 1 || beta < 0  )
         return res;
 
