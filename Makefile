@@ -9,7 +9,7 @@ kizinki:
 sshading:
 	g++ *.cpp -o raytracer -std=c++11 && ./raytracer "Sample Scenes/Input Files/simple_shading.xml"
 bunny:
-	g++ *.cpp -o raytracer -std=c++11 && ./raytracer "Sample Scenes/Input Files/bunny.xml"
+	g++ *.cpp -o raytracer -std=c++11 -O3 && ./raytracer "Sample Scenes/Input Files/bunny.xml"
 cornelbox:
 	g++ *.cpp -o raytracer -std=c++11 && ./raytracer "Sample Scenes/Input Files/cornellbox.xml"
 horseandmug:
@@ -22,3 +22,5 @@ sreflectance:
 	g++ *.cpp -o raytracer -std=c++11 && ./raytracer "Sample Scenes/Input Files/simple_reflectance.xml"
 kizinkisshading:
 	cd CENG477 && cd Homework1 && cd hw1_support_files && make all && ./raytracer "hw1_sample_scenes/simple_shading.xml"
+kizinkihorseandmug:
+	cd CENG477 && cd Homework1 && cd hw1_support_files && make all && ./raytracer "hw1_sample_scenes/horse_and_mug.xml"

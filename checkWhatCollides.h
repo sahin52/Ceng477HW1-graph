@@ -43,9 +43,6 @@ RayIntersect getIntersect(Ray ray,Scene scene,int cameraId){
     //     p("meshIntersect");
     // }
     auto res = getNearestIntersect(sphereIntersect, triangleIntersect, meshIntersect);
-    if(res.isThereIntersect){
-        //p("intersect!!!!!");
-    }
     return res;
     // lengthToThe.. en kucuk olani alcaz
 
