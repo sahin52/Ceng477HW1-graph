@@ -12,6 +12,31 @@ using namespace parser;
 //     cout << "slm\n";
 //     cout << t; 
 // }
+
+Scene idleriDuzelt(Scene scene){
+    
+    for(int i=0;i< scene.meshes.size();i++){
+        scene.meshes[i].material_id--;
+        for(int j=0;j<scene.meshes[i].faces.size();j++){
+            scene.meshes[i].faces[j].v0_id--;
+            scene.meshes[i].faces[j].v1_id--;
+            scene.meshes[i].faces[j].v2_id--;
+        }
+    }
+    for(int i=0;i< scene.triangles.size();i++){
+        scene.triangles[i].material_id--;
+        scene.triangles[i].indices.v0_id--;
+        scene.triangles[i].indices.v1_id--;
+        scene.triangles[i].indices.v2_id--;
+    }
+    for(int i=0;i<scene.spheres.size();i++){
+        scene.spheres[i].center_vertex_id--;
+        scene.spheres[i].material_id--;
+    }
+    // for(int i=0;i<scene.cameras;i++)
+    //     scene.cameras[i].;
+    return scene;
+}
 RaySabitleri rayiHazirla(Camera cam){
     Vec3f gaze =  normalize(cam.gaze);
     Vec3f vector_u = cross(gaze, cam.up);//Yana dogru
@@ -82,7 +107,7 @@ int main(int argc, char* argv[])
 {
     // Sample usage for reading an XML scene file
     parser::Scene scene;
-
+    p("Basladi");
     scene.loadFromXml(argv[1]);
     // p("background color: ");
     // p(scene.background_color);
@@ -114,6 +139,7 @@ int main(int argc, char* argv[])
     // scene.meshes[0].faces.pop_back();
     // scene.meshes[0].faces.pop_back();
     //scene.meshes[0].faces.push_back(b);
+    scene = idleriDuzelt(scene);
     generateImages(scene);
 
     // // The code below creates a test pattern and writes

@@ -60,9 +60,9 @@ Vec3i checkWhatCollides(Ray ray,Scene scene,int cameraId ){
     
     //p("123");
     //p(materialId);
-    Vec3i res = getColorOfTheIntersection(rayIntersect, scene,cameraId,ray);
+    //Vec3i res = getColorOfTheIntersection(rayIntersect, scene,cameraId,ray);
 
-    return res;
+    ///return res;
 
 }
 

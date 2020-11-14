@@ -19,7 +19,7 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, Scene scene){
     // ... -r2 = 0  iki tane t degeri iki tane gectiyse kucuk olani t degerleri negatifse alma
     // t degerleri pozitifse, kucuk olani aldim
     // O + tD 
-    Vec3f center = scene.vertex_data[sphere.center_vertex_id - 1];
+    Vec3f center = scene.vertex_data[sphere.center_vertex_id];
     parser::Vec3f ray_origin_to_sp_center = Vec3fminus(ray.start , center);
     auto radius = sphere.radius;
 
@@ -111,9 +111,9 @@ RayIntersect checkOneTriangle(Ray ray,Scene scene, int TriangleId, Triangle tria
     //res.lengthToTheOrigin;
     //res.intersectPoint;
 
-    Vec3f v0 = scene.vertex_data[triangle.indices.v0_id-1];
-    Vec3f v1 = scene.vertex_data[triangle.indices.v1_id-1];
-    Vec3f v2 = scene.vertex_data[triangle.indices.v2_id-1];
+    Vec3f v0 = scene.vertex_data[triangle.indices.v0_id];
+    Vec3f v1 = scene.vertex_data[triangle.indices.v1_id];
+    Vec3f v2 = scene.vertex_data[triangle.indices.v2_id];
 
     Vec3f v1_v0 = Vec3fminus(v1,v0);
     Vec3f v2_v0 = Vec3fminus(v2,v0);
@@ -207,10 +207,18 @@ RayIntersect checkOneMesh(Ray ray,Mesh mesh,int meshId,int cameraId,Scene scene)
 
 RayIntersect checkMeshes(Ray ray,Scene scene,int cameraId){
     RayIntersect res = emptyRayIntersect;
-    for(int i=0;i<scene.meshes.size();i++){
-        res = checkOneMesh(ray,scene.meshes[i],i,cameraId,scene); //TODO hepsini dene
+    vector<RayIntersect> rvector={};
+    for(int i=0;i<scene.meshes.size();i++){//HATALI TODO
+        rvector.push_back(checkOneMesh(ray,scene.meshes[i],i,cameraId,scene));
+        //res = checkOneMesh(ray,scene.meshes[i],i,cameraId,scene); //TODO hepsini dene
     }
-    return res;
+    if(rvector.size()==0) return emptyRayIntersect;
+    RayIntersect nearest = rvector[0];
+    for(auto i:rvector){
+        if(i.isThereIntersect&&i.lengthToTheOrigin<nearest.lengthToTheOrigin)
+            nearest = i;
+    }
+    return nearest;
     
     // RayIntersect rayIntersect;
     // rayIntersect.isThereIntersect = false;
