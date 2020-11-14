@@ -204,11 +204,15 @@ RayIntersect checkOneMesh(Ray ray,Mesh mesh,int meshId,int cameraId,Scene scene)
     RayIntersect res = emptyRayIntersect;
     //return res;
     vector<RayIntersect> intersects = {};
-    for(auto face: mesh.faces){
+    int size = mesh.faces.size();
+    for(int i=0;i<size;i++){
+        Face face = mesh.faces[i];
+    // }
+    // for(auto face: mesh.faces){
         Triangle tempTriangle;
-        tempTriangle.indices=face;
+        tempTriangle.indices = face;
         // tempTriangle.indices.v1_iface.v2_id;
-        tempTriangle.material_id = mesh.material_id;
+        //tempTriangle.material_id = mesh.material_id;
         Vec3f v0 = scene.vertex_data[tempTriangle.indices.v0_id];
         Vec3f v1 = scene.vertex_data[tempTriangle.indices.v1_id];
         Vec3f v2 = scene.vertex_data[tempTriangle.indices.v2_id];
@@ -241,6 +245,8 @@ RayIntersect checkMeshes(Ray ray,Scene scene,int cameraId){
     for(int i=0;i<size ;i++){
         rvector.push_back(checkOneMesh(ray,scene.meshes[i],i,cameraId,scene));
     }
+
+
     if(rvector.size()==0) return emptyRayIntersect;
     RayIntersect nearest = rvector[0];
     for(auto i:rvector){
