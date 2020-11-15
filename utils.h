@@ -54,4 +54,28 @@ float determinant(const Vec3f &v0, const Vec3f &v1, const Vec3f &v2)
 float dotProduct(const Vec3f &v1,const Vec3f &v2){
     return v1.x*v2.x   +   v1.y*v2.y   +   v1.z*v2.z;
 }
+
+Vec3f Vec3itoVec3f(Vec3i vec3i){
+    Vec3f res ={
+        .x = (float) vec3i.x,
+        .y = (float) vec3i.y,
+        .z = (float) vec3i.z
+    };
+    return res;
+}
+Vec3i Vec3ftoVec3i(Vec3f v){
+    return {
+        .x = (int)v.x,
+        .y = (int)v.y,
+        .z = (int)v.z
+    };
+}
+Vec3f Vec3fMultiply(Vec3f v1,Vec3f v2){
+    return {
+        .x = v1.x*v2.x,
+        .y = v1.y*v2.y,
+        .z = v1.z*v2.z,
+    };
+}
+
 #endif

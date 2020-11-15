@@ -2,8 +2,8 @@
 #define __CHECKSHAPES__
 #include "rayIntersect.h"
 
-
-
+Vec3i checkWhatCollides(const Ray &ray,const Scene &scene,const int &cameraId );
+RayIntersect getIntersect(const Ray &ray,const Scene &scene,const int &cameraId);
 /**
  * returns the collision point and; type and id of the shape if a collision happens
  */
@@ -110,7 +110,7 @@ RayIntersect checkSpheres(const Ray &ray,const Scene &scene){
     return nearest; // t => mesafe katsayisi
 
 
-    
+
 }
 
 

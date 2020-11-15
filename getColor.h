@@ -5,6 +5,7 @@
 using namespace std;
 using namespace parser;
 
+Vec3f getColorOfTheIntersection(const RayIntersect &rayIntersect,const Scene &scene,const int &cameraId,const Ray &ray, int max_recursion_depth);
 Vec3f Irradiance(const PointLight &light,const Vec3f &point){
     float length = getDistance(light.position, point);
     float length_kare = length * length;
@@ -109,36 +110,72 @@ Vec3f addLightFromLightSources(const RayIntersect &rayIntersect,const Scene &sce
     }
     return pixelAsFloat;
 }
-// Vec3f *doesTheMaterialHaveMirrorness(const Scene &scene,const Shape &shape){
-//     int material_id;   
-//     if(shape.form==SPHERE){
-//         material_id = scene.spheres[shape.id].material_id;
-//     }else if(shape.form == TRIANGLE){
-//         material_id = scene.triangles[shape.id].material_id;
-//     }else{
-//         material_id = scene.meshes[shape.id].material_id;
-//     }
-//     Vec3f r = scene.materials[material_id].mirror;
+Vec3f *doesTheMaterialHaveMirrorness(const Scene &scene,const Shape &shape){
+    int material_id;   
+    if(shape.form==SPHERE){
+        material_id = scene.spheres[shape.id].material_id;
+    }else if(shape.form == TRIANGLE){
+        material_id = scene.triangles[shape.id].material_id;
+    }else{
+        material_id = scene.meshes[shape.id].material_id;
+    }
+    Vec3f r = scene.materials[material_id].mirror;
+    Vec3f * res= new Vec3f;
+    res = &r;
+    if(r.x !=0 || r.y!=0 || r.z!=0)
+        return res;
+    else 
+        return nullptr;
+    //return &(scene.materials[material_id].mirror);
+            //TODO mirror var miyi ilk seferde calistir her seferinde hesaplama
+    //return false;
+}
 
-//     Vec3f * res= new Vec3f;
-//     res = &r;
-//     if(r.x !=0 || r.y!=0 || r.z!=0)
-//         return res;
-//     else 
-//         return nullptr;
-//     //return &(scene.materials[material_id].mirror);
-//             //TODO mirror var miyi ilk seferde calistir her seferinde hesaplama
-//     //return false;
-// }
+Vec3f addTheYansimas(const RayIntersect &rayIntersect,const Scene &scene,const  int &cameraId,const Ray &ray, Vec3f &pixelAsFloat, int max_recursion_depth){
+    auto mirrorness =doesTheMaterialHaveMirrorness(scene, rayIntersect.shape);
+    if(mirrorness && max_recursion_depth > 0){
+        //giden rayin yonunde bulunan cismin rengine bakip katsayiyla carpip topluyosun
+        //r=d − 2(d⋅n)n
+        Vec3f wr_yansiyanRay = Vec3fSum(ray.yon ,Vec3fMultiply(rayIntersect.normal, -2 * dotProduct(ray.yon,rayIntersect.normal)));
+        wr_yansiyanRay = normalize(wr_yansiyanRay);
+        
+        Vec3f epsilon =  Vec3fMultiply(wr_yansiyanRay, scene.shadow_ray_epsilon);
 
-Vec3f addTheYansimas(const RayIntersect &rayIntersect,const Scene &scene,const  int &cameraId,const Ray &ray,const  Vec3f &pixelAsFloat){
-    //auto mirrorness =doesTheMaterialHaveMirrorness(scene, rayIntersect.shape);
-    //}else
-    return pixelAsFloat;
+        Ray reflectance_ray = {
+            .isShading = false,
+            .start=Vec3fSum( rayIntersect.intersectPoint , epsilon),
+            .yon = wr_yansiyanRay
+        };
+        RayIntersect rayInt = getIntersect(reflectance_ray,scene,cameraId);
+        
+        int material_id;   
+        Shape shape = rayIntersect.shape;
+        if(shape.form==SPHERE){
+            material_id = scene.spheres[shape.id].material_id;
+        }else if(shape.form == TRIANGLE){
+            material_id = scene.triangles[shape.id].material_id;
+        }else{
+            material_id = scene.meshes[shape.id].material_id;
+        }
+
+        Vec3f reflected;
+        if(rayInt.isThereIntersect && (rayInt.shape.id != rayIntersect.shape.id || rayInt.shape.form != rayIntersect.shape.form ))
+        {
+            reflected = getColorOfTheIntersection(rayInt, scene,cameraId,reflectance_ray, max_recursion_depth-1);
+            pixelAsFloat = Vec3fSum(pixelAsFloat,(Vec3fMultiply(reflected,scene.materials[material_id].mirror)));
+            // pixelAsFloat.x += reflected.x * scene.materials[material_id].mirror.x ;
+            // pixelAsFloat.y += reflected.y * scene.materials[material_id].mirror.y ;
+            // pixelAsFloat.z += reflected.z * scene.materials[material_id].mirror.z ;
+        }
+        
+        return pixelAsFloat;        
+        
+    }else
+        return pixelAsFloat;
 }
 
 
-Vec3i getColorOfTheIntersection(const RayIntersect &rayIntersect,const Scene &scene,const int &cameraId,const Ray &ray){
+Vec3f getColorOfTheIntersection(const RayIntersect &rayIntersect,const Scene &scene,const int &cameraId,const Ray &ray, int max_recursion_depth){
 
     int materialId = 0;
     Vec3f pixelAsFloat;
@@ -147,7 +184,7 @@ Vec3i getColorOfTheIntersection(const RayIntersect &rayIntersect,const Scene &sc
     // else
     //     return {200,50,125};
     if(!rayIntersect.isThereIntersect){
-        return scene.background_color;
+        return Vec3itoVec3f(scene.background_color);
     }
     
     if(rayIntersect.shape.form == SPHERE){
@@ -167,25 +204,14 @@ Vec3i getColorOfTheIntersection(const RayIntersect &rayIntersect,const Scene &sc
     pixelAsFloat.z = scene.ambient_light.z* scene.materials[materialId].ambient.z;
     if(rayIntersect.isThereIntersect) 
     pixelAsFloat = addLightFromLightSources(rayIntersect, scene, cameraId, ray, pixelAsFloat);
+    //pixelAsFloat = addMirroring(pixelAsFloat);
     //Get the light from the light sources,
-    //pixelAsFloat = addTheYansimas(rayIntersect, scene, cameraId, ray, pixelAsFloat);
+    pixelAsFloat = addTheYansimas(rayIntersect, scene, cameraId, ray, pixelAsFloat,max_recursion_depth);
     //Get the yansima
     
 
     //TODO 255
-    Vec3i v ={
-        .x=(int)(pixelAsFloat.x),
-        .y=(int)(pixelAsFloat.y),
-        .z=(int)(pixelAsFloat.z)
-    };
-    if(v.x > 255) v.x = 255;
-    if(v.y > 255) v.y = 255;
-    if(v.z > 255) v.z = 255;
-
-    if(v.x<0) v.x = 0;
-    if(v.y<0) v.y = 0;
-    if(v.z<0) v.z = 0;
-    return v;
+    return pixelAsFloat;
     //return bisi;
     ///return{0,0,0};//TODO
 

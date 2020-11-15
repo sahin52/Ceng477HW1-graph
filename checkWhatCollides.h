@@ -42,8 +42,7 @@ RayIntersect getIntersect(const Ray &ray,const Scene &scene,const int &cameraId)
     // // // // // // if(meshIntersect.isThereIntersect){
     //     p("meshIntersect");
     // }
-    auto res = getNearestIntersect(sphereIntersect, triangleIntersect, meshIntersect);
-    return res;
+    return getNearestIntersect(sphereIntersect, triangleIntersect, meshIntersect);
     // lengthToThe.. en kucuk olani alcaz
 
     //enYakinNoktayiSec();
@@ -53,7 +52,21 @@ RayIntersect getIntersect(const Ray &ray,const Scene &scene,const int &cameraId)
 //Returns the color of the pixel
 Vec3i checkWhatCollides(const Ray &ray,const Scene &scene,const int &cameraId ){
     RayIntersect rayIntersect = getIntersect(ray,scene,cameraId);//idsini verir
-    return getColorOfTheIntersection(rayIntersect, scene,cameraId,ray);
+    Vec3f pixelAsFloat=getColorOfTheIntersection(rayIntersect, scene,cameraId,ray,scene.max_recursion_depth);
+    
+    Vec3i v ={
+        .x=(int)(pixelAsFloat.x),
+        .y=(int)(pixelAsFloat.y),
+        .z=(int)(pixelAsFloat.z)
+    };
+    if(v.x > 255) v.x = 255;
+    if(v.y > 255) v.y = 255;
+    if(v.z > 255) v.z = 255;
+
+    if(v.x<0) v.x = 0;
+    if(v.y<0) v.y = 0;
+    if(v.z<0) v.z = 0;
+    return v;
     
     //p("123");
     //p(materialId);
