@@ -121,7 +121,8 @@ Vec3f *doesTheMaterialHaveMirrorness(const Scene &scene,const Shape &shape){
     }
     Vec3f r = scene.materials[material_id].mirror;
     Vec3f * res= new Vec3f;
-    res = &r;
+    *res = scene.materials[material_id].mirror;
+    //res = &r;
     if(r.x !=0 || r.y!=0 || r.z!=0)
         return res;
     else 

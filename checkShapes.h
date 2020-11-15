@@ -136,7 +136,7 @@ RayIntersect checkOneTriangle(const Ray &ray,const Scene &scene,const  int &Tria
 
     //checking if direction of ray and normal are parallel
     float checkparallel = dotProduct(normalv, ray.yon);
-    if (fabs(checkparallel) <= 0.00001)
+    if (fabs(checkparallel) <= 0.000001)
     {
         return res;
     }
