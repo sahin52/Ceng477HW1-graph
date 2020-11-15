@@ -163,9 +163,6 @@ Vec3f addTheYansimas(const RayIntersect &rayIntersect,const Scene &scene,const  
         {
             reflected = getColorOfTheIntersection(rayInt, scene,cameraId,reflectance_ray, max_recursion_depth-1);
             pixelAsFloat = Vec3fSum(pixelAsFloat,(Vec3fMultiply(reflected,scene.materials[material_id].mirror)));
-            // pixelAsFloat.x += reflected.x * scene.materials[material_id].mirror.x ;
-            // pixelAsFloat.y += reflected.y * scene.materials[material_id].mirror.y ;
-            // pixelAsFloat.z += reflected.z * scene.materials[material_id].mirror.z ;
         }
         
         return pixelAsFloat;        
