@@ -76,8 +76,8 @@ void generateImages(const Scene &scene){
 
         RaySabitleri raySabitleri = rayiHazirla(scene.cameras[cam]);
         unsigned char * image = new unsigned char[(scene.cameras[cam].image_height*scene.cameras[cam].image_width)* 3];
-        int width = scene.cameras[0].image_width;
-        int height = scene.cameras[0].image_height;
+        int width = scene.cameras[cam].image_width;
+        int height = scene.cameras[cam].image_height;
         for(int i=0;i<height;i++){
             //if(i%(height/100)==0)
                 p("image creating boss..."+to_string(i)+"/"+to_string(height));
