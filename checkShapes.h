@@ -239,12 +239,14 @@ RayIntersect checkMeshes(const Ray &ray,const Scene &scene,const int &cameraId){
     vector<RayIntersect> rvector={};
     float size = scene.meshes.size();
     for(int i=0;i<size ;i++){
-        rvector.push_back(checkOneMesh(ray,scene.meshes[i],i,cameraId,scene));
+        RayIntersect temp = checkOneMesh(ray,scene.meshes[i],i,cameraId,scene);
+        if(temp.isThereIntersect)
+            rvector.push_back(temp);
     }
     if(rvector.size()==0) return emptyRayIntersect;
     RayIntersect nearest = rvector[0];
     for(auto i:rvector){
-        if(i.isThereIntersect&&i.lengthToTheOrigin<nearest.lengthToTheOrigin)
+        if(i.lengthToTheOrigin<nearest.lengthToTheOrigin)
             nearest = i;
     }
     return nearest;
