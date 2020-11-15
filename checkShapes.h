@@ -95,7 +95,9 @@ RayIntersect checkSpheres(const Ray &ray,const Scene &scene){
     vector<RayIntersect> intersects = {};
     int size = scene.spheres.size();
     for(int i = 0; i<size ;i++){//TODO tum spherelari hesapla
-        intersects.push_back(checkOneSphere(ray, scene.spheres[i],i,scene));
+        RayIntersect rayIntersect = checkOneSphere(ray, scene.spheres[i],i,scene);
+        if(rayIntersect.isThereIntersect)
+            intersects.push_back(rayIntersect);
     }
     if(intersects.size()==0){
         return emptyRayIntersect;

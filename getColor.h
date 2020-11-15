@@ -101,7 +101,7 @@ Vec3f addLightFromLightSources(const RayIntersect &rayIntersect,const Scene &sce
     for(int i=0;i<numberOfLights;i++){
         PointLight currentLight = scene.point_lights[i];
         if(golgedemi(rayIntersect.intersectPoint, scene, currentLight)){ //Golgede kalmis do nothing
-            return pixelAsFloat;
+            //return pixelAsFloat;
         }else{  //isik vuruyor, o isiktan gelen isik degerlerini ekle
             pixelAsFloat = Vec3fSum(pixelAsFloat, Diffuse(currentLight, scene.materials, materialId, rayIntersect));
             pixelAsFloat = Vec3fSum(pixelAsFloat, Specular(currentLight, rayIntersect, scene, cameraId,materialId));
@@ -109,9 +109,31 @@ Vec3f addLightFromLightSources(const RayIntersect &rayIntersect,const Scene &sce
     }
     return pixelAsFloat;
 }
+// Vec3f *doesTheMaterialHaveMirrorness(const Scene &scene,const Shape &shape){
+//     int material_id;   
+//     if(shape.form==SPHERE){
+//         material_id = scene.spheres[shape.id].material_id;
+//     }else if(shape.form == TRIANGLE){
+//         material_id = scene.triangles[shape.id].material_id;
+//     }else{
+//         material_id = scene.meshes[shape.id].material_id;
+//     }
+//     Vec3f r = scene.materials[material_id].mirror;
+
+//     Vec3f * res= new Vec3f;
+//     res = &r;
+//     if(r.x !=0 || r.y!=0 || r.z!=0)
+//         return res;
+//     else 
+//         return nullptr;
+//     //return &(scene.materials[material_id].mirror);
+//             //TODO mirror var miyi ilk seferde calistir her seferinde hesaplama
+//     //return false;
+// }
 
 Vec3f addTheYansimas(const RayIntersect &rayIntersect,const Scene &scene,const  int &cameraId,const Ray &ray,const  Vec3f &pixelAsFloat){
-    
+    //auto mirrorness =doesTheMaterialHaveMirrorness(scene, rayIntersect.shape);
+    //}else
     return pixelAsFloat;
 }
 
