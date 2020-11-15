@@ -3,7 +3,7 @@
 #include "getColor.h"
 
 
-RayIntersect getNearestIntersect(RayIntersect sphereInt, RayIntersect triangleInt,RayIntersect meshInt){
+RayIntersect getNearestIntersect(const RayIntersect &sphereInt,const  RayIntersect &triangleInt,const RayIntersect &meshInt){
     vector<RayIntersect> distances = {};
     
     if(triangleInt.isThereIntersect)
@@ -29,7 +29,7 @@ RayIntersect getNearestIntersect(RayIntersect sphereInt, RayIntersect triangleIn
     return nearest;
 }
 
-RayIntersect getIntersect(Ray ray,Scene scene,int cameraId){ 
+RayIntersect getIntersect(const Ray &ray,const Scene &scene,const int &cameraId){ 
     auto sphereIntersect = checkSpheres(ray,scene);//Returns the touch point,  id and type of the shape
     auto triangleIntersect = checkTriangles(ray, scene); // ucgene degisyosa
     auto meshIntersect = checkMeshes(ray,scene,cameraId);   //meshe degiyosa
@@ -51,7 +51,7 @@ RayIntersect getIntersect(Ray ray,Scene scene,int cameraId){
 }
 
 //Returns the color of the pixel
-Vec3i checkWhatCollides(Ray ray,Scene scene,int cameraId ){
+Vec3i checkWhatCollides(const Ray &ray,const Scene &scene,const int &cameraId ){
     RayIntersect rayIntersect = getIntersect(ray,scene,cameraId);//idsini verir
     return getColorOfTheIntersection(rayIntersect, scene,cameraId,ray);
     

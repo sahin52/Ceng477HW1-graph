@@ -37,7 +37,7 @@ Scene idleriDuzelt(Scene scene){
     //     scene.cameras[i].;
     return scene;
 }
-RaySabitleri rayiHazirla(Camera cam){
+RaySabitleri rayiHazirla(const Camera &cam){
     Vec3f gaze =  normalize(cam.gaze);
     Vec3f vector_u = cross(gaze, cam.up);//Yana dogru
     vector_u = normalize(vector_u);
@@ -71,7 +71,7 @@ RaySabitleri rayiHazirla(Camera cam){
  * 
  * 
  */
-void generateImages(Scene scene){
+void generateImages(const Scene &scene){
     for(int cam = 0; cam < scene.cameras.size(); cam++){
 
         RaySabitleri raySabitleri = rayiHazirla(scene.cameras[cam]);

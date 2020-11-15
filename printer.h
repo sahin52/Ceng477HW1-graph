@@ -8,22 +8,22 @@ using namespace std;
 using namespace parser;
 
 
-void p(string a){
+void p(const string &a){
     cout << a<<"\n";
 }
-void p(float f){
+void p(const float &f){
     cout<<f<<"\n";
 }
-void p(parser::Vec3i v){ //Prints vector
+void p(const parser::Vec3i &v){ //Prints vector
     cout <<"< " << v.x << " " << v.y << " " << v.z << " >";
 }
-void p(parser::Vec3f v){ //Prints vector
+void p(const parser::Vec3f &v){ //Prints vector
     cout <<"" << v.x << " " << v.y << " " << v.z <<"\n";
 }
-void p(Vec4f v){
+void p(const Vec4f &v){
     cout << v.w << " " << v.x << " "<<   v.y << " " <<v.z<<"\n";
 }
-void p(vector<PointLight> point_lights){
+void p(const vector<PointLight> &point_lights){
     for(auto i: point_lights){
         p("intensity: ");
         p(i.intensity);
@@ -33,7 +33,7 @@ void p(vector<PointLight> point_lights){
         p(" | ");
     }
 }
-void p(std::vector<Material> materials){
+void p(const std::vector<Material> &materials){
     for(auto i: materials){
         p( "Ambient: ");
         p( i.ambient);
@@ -55,21 +55,21 @@ void p(std::vector<Material> materials){
     p("\n");
 }
 
-void p(Face face){
+void p(const Face &face){
     cout << face.v0_id<<" -- " << face.v1_id << " -- " << face.v2_id << "|" << "\n";
 }
-void p(std::vector<Vec3f> vertex_data) {
+void p(const std::vector<Vec3f> &vertex_data) {
     for(auto i: vertex_data){
         p("vertex_data: ");
         p(i);
         p("\n");
     }
 }
-void p(std::vector<Face> faces){
+void p(const std::vector<Face> &faces){
     for(auto i: faces)
         p(i);
 }
-void p(Mesh mesh){
+void p(const Mesh &mesh){
     p(" mesh: ");
     p(" faces: ");
     p(mesh.faces);
@@ -84,7 +84,7 @@ void p(const std::vector<Mesh>& meshes){
 // for(int i=0;i<.size();i++){
 //         p([i]);
 //     }
-void p(Sphere s){
+void p(const Sphere &s){
     p("Sphere: ");
     p(" center_vertex_id: ");
     p(s.center_vertex_id);
@@ -94,7 +94,7 @@ void p(Sphere s){
     p(s.radius);
 }
 
-void p(Triangle t){
+void p(const Triangle &t){
     p(" indices: ");
     p(t.indices);
     p(" material_id: ");
@@ -103,14 +103,14 @@ void p(Triangle t){
 }
 
 
-void p(std::vector<Triangle> triangles){
+void p(const std::vector<Triangle> &triangles){
     cout << "Triangle ";
     for(auto i: triangles)
         p(i);
     cout<< "|";
 }
 
-void p(std::vector<Sphere> spheres){
+void p(const std::vector<Sphere> &spheres){
     cout << "Spheres: ";
     for(auto i: spheres){
         p(i);
@@ -118,7 +118,7 @@ void p(std::vector<Sphere> spheres){
 }
 
 
-void p(std::vector<Camera> cams){
+void p(const std::vector<Camera> &cams){
     for(int i=0;i<cams.size();i++){
         p("position: ");
         p(cams[i].position);

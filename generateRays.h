@@ -15,7 +15,7 @@ struct Ray
     Vec3f yon;
 };
 
-Vec3f cross(Vec3f v1, Vec3f v2)
+Vec3f cross(const Vec3f &v1,const Vec3f &v2)
 {
     float x = v1.y*v2.z - v1.z*v2.y;
     float y = v1.z*v2.x - v1.x*v2.z;
@@ -25,7 +25,7 @@ Vec3f cross(Vec3f v1, Vec3f v2)
     return result;
 }
 
-Vec3f normalize(Vec3f v)
+Vec3f normalize(const Vec3f &v)
 {
     Vec3f result;
     float uzunluk =  sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
@@ -43,7 +43,7 @@ Vec3f normalize(Vec3f v)
  * 
  * 
 */
-Ray generateRay(int row, int column, Camera cam, RaySabitleri raySabitleri)
+Ray generateRay(const int &row, const int &column,const Camera &cam,const RaySabitleri &raySabitleri)
 {
     Vec3f vector_u = raySabitleri.vector_u;
     Vec3f vector_v = raySabitleri.vector_v;

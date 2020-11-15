@@ -5,7 +5,7 @@
 using namespace std;
 using namespace parser;
 
-Vec3f Irradiance(PointLight light, Vec3f point){
+Vec3f Irradiance(const PointLight &light,const Vec3f &point){
     float length = getDistance(light.position, point);
     float length_kare = length * length;
     //TODO sifirsa napcaz
@@ -17,7 +17,7 @@ Vec3f Irradiance(PointLight light, Vec3f point){
     return res;
 }
 
-Vec3f Diffuse(PointLight light, std::vector<Material> materials, int mat_id, RayIntersect ray){
+Vec3f Diffuse(const PointLight &light, const std::vector<Material> &materials,const  int &mat_id,const RayIntersect &ray){
 
     Vec3f irradiance = Irradiance(light, ray.intersectPoint);
     Vec3f w_i = normalize(Vec3fminus(light.position, ray.intersectPoint));
@@ -31,7 +31,7 @@ Vec3f Diffuse(PointLight light, std::vector<Material> materials, int mat_id, Ray
     };
 }
 
-Vec3f Specular(PointLight light, RayIntersect rayIntersect, Scene scene, int cam_id, int mat_id){
+Vec3f Specular(const PointLight &light,const  RayIntersect &rayIntersect,const  Scene &scene,const  int &cam_id,const  int &mat_id){
     
     Vec3f recieved_irr = Irradiance(light, rayIntersect.intersectPoint);
     Vec3f w_i = normalize(Vec3fminus(light.position, rayIntersect.intersectPoint));
@@ -56,7 +56,7 @@ Vec3f Specular(PointLight light, RayIntersect rayIntersect, Scene scene, int cam
 }
 
 //Returns whether a point is in shadow from the pointlight
-bool golgedemi(Vec3f pointToCheck,Scene scene,PointLight currentLight){
+bool golgedemi(const Vec3f &pointToCheck,const Scene &scene,const PointLight &currentLight){
     bool res=false;
     //intersection point ve light arasi ray
     Ray ray;
@@ -85,7 +85,7 @@ bool golgedemi(Vec3f pointToCheck,Scene scene,PointLight currentLight){
 
     return false;
 };
-Vec3f addLightFromLightSources(RayIntersect rayIntersect,Scene scene, int cameraId,Ray ray, Vec3f pixelAsFloat){
+Vec3f addLightFromLightSources(const RayIntersect &rayIntersect,const Scene &scene,const int &cameraId,const Ray &ray, Vec3f pixelAsFloat){
     int numberOfLights = scene.point_lights.size();
     int materialId=1;
     if(rayIntersect.shape.form == SPHERE){
@@ -103,20 +103,20 @@ Vec3f addLightFromLightSources(RayIntersect rayIntersect,Scene scene, int camera
         if(golgedemi(rayIntersect.intersectPoint, scene, currentLight)){ //Golgede kalmis do nothing
             return pixelAsFloat;
         }else{  //isik vuruyor, o isiktan gelen isik degerlerini ekle
-            pixelAsFloat = Vec3fSum(pixelAsFloat, Diffuse(currentLight, scene.materials, materialId, rayIntersect) );
+            pixelAsFloat = Vec3fSum(pixelAsFloat, Diffuse(currentLight, scene.materials, materialId, rayIntersect));
             //pixelAsFloat = Vec3fSum(pixelAsFloat, Specular(currentLight, rayIntersect, scene, cameraId,materialId,ray))       ;
         }
     }
     return pixelAsFloat;
 }
 
-Vec3f addTheYansimas(RayIntersect rayIntersect,Scene scene, int cameraId,Ray ray, Vec3f pixelAsFloat){
+Vec3f addTheYansimas(const RayIntersect &rayIntersect,const Scene &scene,const  int &cameraId,const Ray &ray,const  Vec3f &pixelAsFloat){
     
     return pixelAsFloat;
 }
 
 
-Vec3i getColorOfTheIntersection(RayIntersect rayIntersect,Scene scene,int cameraId,Ray ray){
+Vec3i getColorOfTheIntersection(const RayIntersect &rayIntersect,const Scene &scene,const int &cameraId,const Ray &ray){
 
     int materialId = 0;
     Vec3f pixelAsFloat;

@@ -5,7 +5,7 @@ run:
 testfile:
 	cd Tests && make && ./test && cd ..
 kizinki:
-	cd CENG477 && cd Homework1 && cd hw1_support_files && make all && ./raytracer simple.xml
+	cd CENG477 && cd Homework1 && cd hw1_support_files && make all && time ./raytracer simple.xml
 sshading:
 	g++ *.cpp -o raytracer -std=c++11 && ./raytracer "Sample Scenes/Input Files/simple_shading.xml"
 bunny:

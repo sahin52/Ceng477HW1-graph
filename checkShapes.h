@@ -7,7 +7,7 @@
 /**
  * returns the collision point and; type and id of the shape if a collision happens
  */
-RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, Scene scene){
+RayIntersect checkOneSphere(const Ray &ray,const Sphere &sphere,const  int &shapeId,const  Scene &scene){
     //P = point on the sphere, C is center, r is radius
     // ∥P−C∥2=r2  //sphere 
     // dot((P−C),(P−C))=r2
@@ -89,7 +89,7 @@ RayIntersect checkOneSphere(Ray ray,Sphere sphere, int shapeId, Scene scene){
 /** Checks all spheres and returns the nearest RayIntersect To the camera
  * 
 */
-RayIntersect checkSpheres(Ray ray,Scene scene){ 
+RayIntersect checkSpheres(const Ray &ray,const Scene &scene){ 
 
     RayIntersect rayIntersect = emptyRayIntersect;
     vector<RayIntersect> intersects = {};
@@ -116,7 +116,7 @@ RayIntersect checkSpheres(Ray ray,Scene scene){
 
 
 //*******************************************///
-RayIntersect checkOneTriangle(Ray ray,Scene scene, int TriangleId, Triangle triangle,Vec3f v0, Vec3f v1, Vec3f v2){
+RayIntersect checkOneTriangle(const Ray &ray,const Scene &scene,const  int &TriangleId,const  Triangle &triangle,const Vec3f &v0,const  Vec3f &v1,const  Vec3f &v2){
     //TODO
     RayIntersect res;
     //return emptyRayIntersect;
@@ -176,7 +176,7 @@ RayIntersect checkOneTriangle(Ray ray,Scene scene, int TriangleId, Triangle tria
 
     return res;
 }
-RayIntersect checkTriangles(Ray ray,Scene scene){
+RayIntersect checkTriangles(const Ray &ray,const Scene &scene){
     // RayIntersect checkOneTriangle(Ray ray,Triangle triangle,int cameraId);
 
     RayIntersect rayIntersect = emptyRayIntersect;
@@ -199,7 +199,7 @@ RayIntersect checkTriangles(Ray ray,Scene scene){
 //*******************************************///
 
 //////?????????????????????????/////////// MESH START
-RayIntersect checkOneMesh(Ray ray,Mesh mesh,int meshId,int cameraId,Scene scene){
+RayIntersect checkOneMesh(const Ray &ray,const Mesh &mesh,const int &meshId,const int &cameraId,const Scene &scene){
     //mesh ucgenlerden olusur, mesh icerisindeki tum faceleri bir ucgen haline getirip checkonetriangle'da kullanabiliriz
     RayIntersect res = emptyRayIntersect;
     //return res;
@@ -238,7 +238,7 @@ RayIntersect checkOneMesh(Ray ray,Mesh mesh,int meshId,int cameraId,Scene scene)
     return res;
 }
 
-RayIntersect checkMeshes(Ray ray,Scene scene,int cameraId){
+RayIntersect checkMeshes(const Ray &ray,const Scene &scene,const int &cameraId){
     RayIntersect res = emptyRayIntersect;
     vector<RayIntersect> rvector={};
     float size = scene.meshes.size();
