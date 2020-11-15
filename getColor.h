@@ -104,7 +104,7 @@ Vec3f addLightFromLightSources(const RayIntersect &rayIntersect,const Scene &sce
             return pixelAsFloat;
         }else{  //isik vuruyor, o isiktan gelen isik degerlerini ekle
             pixelAsFloat = Vec3fSum(pixelAsFloat, Diffuse(currentLight, scene.materials, materialId, rayIntersect));
-            //pixelAsFloat = Vec3fSum(pixelAsFloat, Specular(currentLight, rayIntersect, scene, cameraId,materialId,ray))       ;
+            pixelAsFloat = Vec3fSum(pixelAsFloat, Specular(currentLight, rayIntersect, scene, cameraId,materialId));
         }
     }
     return pixelAsFloat;

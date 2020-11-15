@@ -162,7 +162,7 @@ RayIntersect checkOneTriangle(const Ray &ray,const Scene &scene,const  int &Tria
     float length = sqrt((point.x-ray.start.x)*(point.x-ray.start.x)+(point.y-ray.start.y)*(point.y-ray.start.y)+(point.z-ray.start.z)*(point.z-ray.start.z));
 
     // if none of the ifs above true than point is inside triangle
-    res.normal = normalv;
+    res.normal = normalize(normalv);
     res.isThereIntersect = true;
     res.lengthToTheOrigin = length;
     res.intersectPoint = point;
