@@ -134,23 +134,21 @@ RayIntersect checkOneTriangle(const Ray &ray,const Scene &scene,const  int &Tria
 
     //checking if direction of ray and normal are parallel
     float checkparallel = dotProduct(normalv, ray.yon);
-    if (fabs(checkparallel) <= 0.0001)
+    if (fabs(checkparallel) <= 0.00001)
     {
         return res;
     }
 
-    Vec3f v0_v2 = Vec3fminus(v0,v2);
-    Vec3f v0_start = Vec3fminus(v0,ray.start);
-    Vec3f v0_v1 = Vec3fminus(v0,v1);
-    float t = (determinant(v0_v1, v0_v2, v0_start)) / checkparallel ;
+
+    float t = (determinant(Vec3fminus(v0,v1), Vec3fminus(v0,v2), Vec3fminus(v0,ray.start))) / checkparallel ;
     if(t <= 0.0f)
         return res;
 
-    float gamma = (determinant(v0_v1,v0_start, ray.yon)) / checkparallel ;
+    float gamma = (determinant(Vec3fminus(v0,v1),Vec3fminus(v0,ray.start), ray.yon)) / checkparallel ;
     if(gamma < 0 || gamma > 1)
         return res;
 
-    float beta = (determinant(v0_start,v0_v2,ray.yon)) / checkparallel ;
+    float beta = (determinant(Vec3fminus(v0,ray.start), Vec3fminus(v0,v2), ray.yon)) / checkparallel ;
     if (beta + gamma > 1 || beta < 0  )
         return res;
 
@@ -204,15 +202,11 @@ RayIntersect checkOneMesh(const Ray &ray,const Mesh &mesh,const int &meshId,cons
     RayIntersect res = emptyRayIntersect;
     //return res;
     vector<RayIntersect> intersects = {};
-    int size = mesh.faces.size();
-    for(int i=0;i<size;i++){
-        Face face = mesh.faces[i];
-    // }
-    // for(auto face: mesh.faces){
+    for(auto face: mesh.faces){
         Triangle tempTriangle;
-        tempTriangle.indices = face;
+        tempTriangle.indices=face;
         // tempTriangle.indices.v1_iface.v2_id;
-        //tempTriangle.material_id = mesh.material_id;
+        tempTriangle.material_id = mesh.material_id;
         Vec3f v0 = scene.vertex_data[tempTriangle.indices.v0_id];
         Vec3f v1 = scene.vertex_data[tempTriangle.indices.v1_id];
         Vec3f v2 = scene.vertex_data[tempTriangle.indices.v2_id];
@@ -245,8 +239,6 @@ RayIntersect checkMeshes(const Ray &ray,const Scene &scene,const int &cameraId){
     for(int i=0;i<size ;i++){
         rvector.push_back(checkOneMesh(ray,scene.meshes[i],i,cameraId,scene));
     }
-
-
     if(rvector.size()==0) return emptyRayIntersect;
     RayIntersect nearest = rvector[0];
     for(auto i:rvector){
