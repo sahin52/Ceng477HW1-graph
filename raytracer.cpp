@@ -1,5 +1,6 @@
 #include "checkWhatCollides.h"
 #include <thread>
+#include <pthread.h>
 typedef unsigned char RGB[3];
 using namespace std;
 using namespace parser;
@@ -63,7 +64,7 @@ RaySabitleri rayiHazirla(const Camera &cam){
 }
 
 
-void threadable(int i, int to,const Scene &scene,RaySabitleri raySabitleri,unsigned char * image,int width, int height,int cam){
+void threadable(int i, int to,const Scene &scene,const RaySabitleri &raySabitleri,unsigned char * image,const int &width,const  int &height,const int &cam){
     for(;i<to;i++){
         p("image creating boss..."+to_string(i)+"/"+to_string(height));
         for(int j=0;j<width;j++){
@@ -104,28 +105,45 @@ void generateImages(const Scene &scene){
         //thread 3: height/2+1-3*height/4
         //thread 4: 3*height/4+1-height
         //std::thread first();
-        for(int i=0;i<height;i++){
-            //if(i%(height/100)==0)
-                p("image creating boss..."+to_string(i)+"/"+to_string(height));
-            for(int j=0;j<width;j++){
-                
-
-                auto ray  = generateRay(i,j,scene.cameras[cam], raySabitleri);
-                // if(i%100==0 && j%100==0) {
-                    
-                //     std::cout << i << " " << j<< " " << ray.yon.x << " ";
-                //     std::cout << ray.yon.y << " ";
-                //     std::cout << ray.yon.z << std::endl;
-                // }
-                Vec3i pixel = checkWhatCollides(ray,scene);//bir pixel
-
-                image[i*width*3+3*j  ] =(unsigned char)  pixel.x; 
-                image[i*width*3+3*j+1] =(unsigned char)  pixel.y;
-                image[i*width*3+3*j+2] =(unsigned char)  pixel.z;
-            }
-        }
+        //threadable(0,height/4,scene,raySabitleri,image,width,height,cam);
+        //TODO less than 4 i ise tek thread
+        std::thread t1 = std::thread(threadable,0           ,height/4    ,scene,raySabitleri,image,width,height,cam);
+        std::thread t2 = std::thread(threadable,height/4  ,height/2    ,scene,raySabitleri,image,width,height,cam);
+        std::thread t3 = std::thread(threadable,height/2    ,3*height/4  ,scene,raySabitleri,image,width,height,cam);
+        std::thread t4 = std::thread(threadable,3*height/4,height      ,scene,raySabitleri,image,width,height,cam);
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();
+        // thread anan = thread(tmpthreadable);
+        // anan.join();
         p("Generating image: "+scene.cameras[cam].image_name);
         write_ppm(scene.cameras[cam].image_name.c_str(), image, scene.cameras[cam].image_width,scene.cameras[cam].image_height);
+
+
+
+        // for(int i=0;i<height;i++){
+        //     //if(i%(height/100)==0)
+        //         p("image creating boss..."+to_string(i)+"/"+to_string(height));
+        //     for(int j=0;j<width;j++){
+                
+
+        //         auto ray  = generateRay(i,j,scene.cameras[cam], raySabitleri);
+        //         // if(i%100==0 && j%100==0) {
+                    
+        //         //     std::cout << i << " " << j<< " " << ray.yon.x << " ";
+        //         //     std::cout << ray.yon.y << " ";
+        //         //     std::cout << ray.yon.z << std::endl;
+        //         // }
+        //         Vec3i pixel = checkWhatCollides(ray,scene);//bir pixel
+
+        //         image[i*width*3+3*j  ] =(unsigned char)  pixel.x; 
+        //         image[i*width*3+3*j+1] =(unsigned char)  pixel.y;
+        //         image[i*width*3+3*j+2] =(unsigned char)  pixel.z;
+        //     }
+        // }
+        // p("Generating image: "+scene.cameras[cam].image_name);
+        // write_ppm(scene.cameras[cam].image_name.c_str(), image, scene.cameras[cam].image_width,scene.cameras[cam].image_height);
     }
     
 }
