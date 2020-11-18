@@ -66,7 +66,7 @@ RaySabitleri rayiHazirla(const Camera &cam){
 
 void threadable(int i, int to,const Scene &scene,const RaySabitleri &raySabitleri,unsigned char * image,const int &width,const  int &height,const int &cam){
     for(;i<to;i++){
-        p("image creating boss..."+to_string(i)+"/"+to_string(height));
+        p("image creating boss..."+to_string(i)+"/"+to_string(to));
         for(int j=0;j<width;j++){
             
 
