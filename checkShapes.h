@@ -2,8 +2,8 @@
 #define __CHECKSHAPES__
 #include "rayIntersect.h"
 
-Vec3i checkWhatCollides(const Ray &ray,const Scene &scene,const int &cameraId );
-RayIntersect getIntersect(const Ray &ray,const Scene &scene,const int &cameraId);
+Vec3i checkWhatCollides(const Ray &ray,const Scene &scene );
+RayIntersect getIntersect(const Ray &ray,const Scene &scene);
 /**
  * returns the collision point and; type and id of the shape if a collision happens
  */
@@ -94,7 +94,7 @@ RayIntersect checkSpheres(const Ray &ray,const Scene &scene){
     RayIntersect rayIntersect = emptyRayIntersect;
     vector<RayIntersect> intersects = {};
     int size = scene.spheres.size();
-    for(int i = 0; i<size ;i++){//TODO tum spherelari hesapla
+    for(int i = 0; i<size ;i++){
         RayIntersect rayIntersect = checkOneSphere(ray, scene.spheres[i],i,scene);
         if(rayIntersect.isThereIntersect)
             intersects.push_back(rayIntersect);
@@ -119,7 +119,7 @@ RayIntersect checkSpheres(const Ray &ray,const Scene &scene){
 
 //*******************************************///
 RayIntersect checkOneTriangle(const Ray &ray,const Scene &scene,const  int &TriangleId,const  Triangle &triangle,const Vec3f &v0,const  Vec3f &v1,const  Vec3f &v2){
-    //TODO
+   
     RayIntersect res;
     //return emptyRayIntersect;
     res.isThereIntersect = false;
@@ -182,7 +182,7 @@ RayIntersect checkTriangles(const Ray &ray,const Scene &scene){
     RayIntersect rayIntersect = emptyRayIntersect;
     vector<RayIntersect> intersects={};
     int size = scene.triangles.size();
-    for(int i=0;i<size;i++){ //TODO triangle id ile sira ayni olmayabilir bir de tum ucgenleri deneyip return etmeli
+    for(int i=0;i<size;i++){
         Triangle triangle = scene.triangles[i];
         Vec3f v0 = scene.vertex_data[triangle.indices.v0_id];
         Vec3f v1 = scene.vertex_data[triangle.indices.v1_id];
@@ -199,7 +199,7 @@ RayIntersect checkTriangles(const Ray &ray,const Scene &scene){
 //*******************************************///
 
 //////?????????????????????????/////////// MESH START
-RayIntersect checkOneMesh(const Ray &ray,const Mesh &mesh,const int &meshId,const int &cameraId,const Scene &scene){
+RayIntersect checkOneMesh(const Ray &ray,const Mesh &mesh,const int &meshId,const Scene &scene){
     //mesh ucgenlerden olusur, mesh icerisindeki tum faceleri bir ucgen haline getirip checkonetriangle'da kullanabiliriz
     RayIntersect res = emptyRayIntersect;
     //return res;
@@ -212,7 +212,7 @@ RayIntersect checkOneMesh(const Ray &ray,const Mesh &mesh,const int &meshId,cons
         Vec3f v0 = scene.vertex_data[tempTriangle.indices.v0_id];
         Vec3f v1 = scene.vertex_data[tempTriangle.indices.v1_id];
         Vec3f v2 = scene.vertex_data[tempTriangle.indices.v2_id];
-        res = checkOneTriangle(ray,scene,cameraId,tempTriangle,v0,v1,v2);
+        res = checkOneTriangle(ray,scene,1,tempTriangle,v0,v1,v2);
         res.shape.form = MESH;
         res.shape.id = meshId;
         if(res.isThereIntersect)
@@ -234,12 +234,12 @@ RayIntersect checkOneMesh(const Ray &ray,const Mesh &mesh,const int &meshId,cons
     return res;
 }
 
-RayIntersect checkMeshes(const Ray &ray,const Scene &scene,const int &cameraId){
+RayIntersect checkMeshes(const Ray &ray,const Scene &scene){
     RayIntersect res = emptyRayIntersect;
     vector<RayIntersect> rvector={};
     float size = scene.meshes.size();
     for(int i=0;i<size ;i++){
-        RayIntersect temp = checkOneMesh(ray,scene.meshes[i],i,cameraId,scene);
+        RayIntersect temp = checkOneMesh(ray,scene.meshes[i],i,scene);
         if(temp.isThereIntersect)
             rvector.push_back(temp);
     }

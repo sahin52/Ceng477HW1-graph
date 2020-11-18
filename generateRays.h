@@ -10,7 +10,6 @@ struct RaySabitleri{
 };
 struct Ray
 {
-    bool isShading;
     Vec3f start;
     Vec3f yon;
 };
@@ -59,7 +58,6 @@ Ray generateRay(const int &row, const int &column,const Camera &cam,const RaySab
     hedef_pixel.z = sol_en_ust.z + vector_u.z*yatay_pixel_mesafesi - vector_v.z*dikey_pixel_mesafesi;
 
     Ray ray;
-    ray.isShading = false;
     ray.start = cam.position;
     ray.yon.x = hedef_pixel.x - cam.position.x;
     ray.yon.y = hedef_pixel.y - cam.position.y;

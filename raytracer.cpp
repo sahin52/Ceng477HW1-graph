@@ -1,5 +1,5 @@
 #include "checkWhatCollides.h"
-
+#include <thread>
 typedef unsigned char RGB[3];
 using namespace std;
 using namespace parser;
@@ -63,7 +63,27 @@ RaySabitleri rayiHazirla(const Camera &cam){
 }
 
 
+void threadable(int i, int to,const Scene &scene,RaySabitleri raySabitleri,unsigned char * image,int width, int height,int cam){
+    for(;i<to;i++){
+        p("image creating boss..."+to_string(i)+"/"+to_string(height));
+        for(int j=0;j<width;j++){
+            
 
+            auto ray  = generateRay(i,j,scene.cameras[cam], raySabitleri);
+            // if(i%100==0 && j%100==0) {
+                
+            //     std::cout << i << " " << j<< " " << ray.yon.x << " ";
+            //     std::cout << ray.yon.y << " ";
+            //     std::cout << ray.yon.z << std::endl;
+            // }
+            Vec3i pixel = checkWhatCollides(ray,scene);//bir pixel
+
+            image[i*width*3+3*j  ] =(unsigned char)  pixel.x; 
+            image[i*width*3+3*j+1] =(unsigned char)  pixel.y;
+            image[i*width*3+3*j+2] =(unsigned char)  pixel.z;
+        }
+    }
+}
 /**
  * Gets the scene and returns the image as a char* 
  * Uses details like width and height 
@@ -78,6 +98,12 @@ void generateImages(const Scene &scene){
         unsigned char * image = new unsigned char[(scene.cameras[cam].image_height*scene.cameras[cam].image_width)* 3];
         int width = scene.cameras[cam].image_width;
         int height = scene.cameras[cam].image_height;
+        int thread_number=4;
+        //thread 1: 0-height/4
+        //thread 2: height/4+1-height/2
+        //thread 3: height/2+1-3*height/4
+        //thread 4: 3*height/4+1-height
+        //std::thread first();
         for(int i=0;i<height;i++){
             //if(i%(height/100)==0)
                 p("image creating boss..."+to_string(i)+"/"+to_string(height));
@@ -91,9 +117,8 @@ void generateImages(const Scene &scene){
                 //     std::cout << ray.yon.y << " ";
                 //     std::cout << ray.yon.z << std::endl;
                 // }
-                Vec3i pixel = checkWhatCollides(ray,scene,cam);//bir pixel
+                Vec3i pixel = checkWhatCollides(ray,scene);//bir pixel
 
-                //TODO:
                 image[i*width*3+3*j  ] =(unsigned char)  pixel.x; 
                 image[i*width*3+3*j+1] =(unsigned char)  pixel.y;
                 image[i*width*3+3*j+2] =(unsigned char)  pixel.z;

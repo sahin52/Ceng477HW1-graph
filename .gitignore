@@ -1,3 +1,5 @@
 CENG477
 *.ppm
 raytracer
+*.tar
+*.tar.gz

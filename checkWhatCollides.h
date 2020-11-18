@@ -19,7 +19,6 @@ RayIntersect getNearestIntersect(const RayIntersect &sphereInt,const  RayInterse
     }else{
         //p("intersect at nearest");
     }
-    //TODO lengthToTheOrigin hatali birisinde
     RayIntersect nearest = distances[0];
     for(auto i: distances){
         if(i.lengthToTheOrigin < nearest.lengthToTheOrigin){
@@ -29,10 +28,10 @@ RayIntersect getNearestIntersect(const RayIntersect &sphereInt,const  RayInterse
     return nearest;
 }
 
-RayIntersect getIntersect(const Ray &ray,const Scene &scene,const int &cameraId){ 
+RayIntersect getIntersect(const Ray &ray,const Scene &scene){ 
     auto sphereIntersect = checkSpheres(ray,scene);//Returns the touch point,  id and type of the shape
     auto triangleIntersect = checkTriangles(ray, scene); // ucgene degisyosa
-    auto meshIntersect = checkMeshes(ray,scene,cameraId);   //meshe degiyosa
+    auto meshIntersect = checkMeshes(ray,scene);   //meshe degiyosa
     // if(sphereIntersect.isThereIntersect){
     //     p("sphere intersect");
     // }
@@ -50,9 +49,9 @@ RayIntersect getIntersect(const Ray &ray,const Scene &scene,const int &cameraId)
 }
 
 //Returns the color of the pixel
-Vec3i checkWhatCollides(const Ray &ray,const Scene &scene,const int &cameraId ){
-    RayIntersect rayIntersect = getIntersect(ray,scene,cameraId);//idsini verir
-    Vec3f pixelAsFloat=getColorOfTheIntersection(rayIntersect, scene,cameraId,ray,scene.max_recursion_depth);
+Vec3i checkWhatCollides(const Ray &ray,const Scene &scene ){
+    RayIntersect rayIntersect = getIntersect(ray,scene);//idsini verir
+    Vec3f pixelAsFloat=getColorOfTheIntersection(rayIntersect, scene,ray,scene.max_recursion_depth);
     
     Vec3i v ={
         .x=(int)(pixelAsFloat.x),
