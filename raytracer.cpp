@@ -107,10 +107,49 @@ void generateImages(const Scene &scene){
         //std::thread first();
         //threadable(0,height/4,scene,raySabitleri,image,width,height,cam);
         //TODO less than 4 i ise tek thread
-        std::thread t1 = std::thread(threadable,0           ,height/4    ,scene,raySabitleri,image,width,height,cam);
+        const auto processor_count = std::thread::hardware_concurrency();
+        cout << processor_count<<"\n";
+        std::thread t1 = std::thread(threadable,0         ,height/4    ,scene,raySabitleri,image,width,height,cam);
         std::thread t2 = std::thread(threadable,height/4  ,height/2    ,scene,raySabitleri,image,width,height,cam);
-        std::thread t3 = std::thread(threadable,height/2    ,3*height/4  ,scene,raySabitleri,image,width,height,cam);
+        std::thread t3 = std::thread(threadable,height/2  ,3*height/4  ,scene,raySabitleri,image,width,height,cam);
         std::thread t4 = std::thread(threadable,3*height/4,height      ,scene,raySabitleri,image,width,height,cam);
+        // std::thread t4 = std::thread(threadable,3*height/4,height      ,scene,raySabitleri,image,width,height,cam);
+        // std::thread t4 = std::thread(threadable,3*height/4,height      ,scene,raySabitleri,image,width,height,cam);
+        // std::thread t4 = std::thread(threadable,3*height/4,height      ,scene,raySabitleri,image,width,height,cam);
+        // std::thread t4 = std::thread(threadable,3*height/4,height      ,scene,raySabitleri,image,width,height,cam);
+        // std::thread t4 = std::thread(threadable,3*height/4,height      ,scene,raySabitleri,image,width,height,cam);
+        // std::thread t4 = std::thread(threadable,3*height/4,height      ,scene,raySabitleri,image,width,height,cam);
+        // std::thread t4 = std::thread(threadable,3*height/4,height      ,scene,raySabitleri,image,width,height,cam);
+        // std::thread t4 = std::thread(threadable,3*height/4,height      ,scene,raySabitleri,image,width,height,cam);
+        // std::thread t5 = std::thread(threadable,3*height/4,height      ,scene,raySabitleri,image,width,height,cam);
+        // std::thread t6 = std::thread(threadable,3*height/4,height      ,scene,raySabitleri,image,width,height,cam);
+        // std::thread t7 = std::thread(threadable,3*height/4,height      ,scene,raySabitleri,image,width,height,cam);
+        // std::thread t8 = std::thread(threadable,3*height/4,height      ,scene,raySabitleri,image,width,height,cam);
+
+        // t1.join();
+        
+        // t1.join();
+        
+        // t1.join();
+        
+        // t1.join();
+        
+        // t1.join();
+        
+        // t1.join();
+        
+        // t1.join();
+        
+        // t1.join();
+        
+        // t1.join();
+        
+        // t1.join();
+        
+        // t1.join();
+        
+        // t1.join();
+        
         t1.join();
         t2.join();
         t3.join();
